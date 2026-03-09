@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ScriptMaster">
+<meta name="theme-color" content="#0e0e12">
+<link rel="manifest" id="pwa-manifest">
+<link rel="apple-touch-icon" id="pwa-icon">
+<title>ScriptMaster — 文字マスター</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+:root{--bg:#0e0e12;--surface:#16161c;--surface2:#1e1e26;--border:#2a2a36;--text:#f0eef8;--muted:#6b6880;--accent-ko:#7c6bff;--accent-ko-light:#a99bff;--accent-ar:#ff6b6b;--accent-ar-light:#ff9b9b;--success:#4ade80;--fail:#f87171}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(124,107,255,0.08) 0%,transparent 70%);pointer-events:none}
+body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(255,107,107,0.06) 0%,transparent 70%);pointer-events:none}
+header{border-bottom:1px solid var(--border);padding:.8rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;position:sticky;top:0;background:rgba(14,14,18,0.92);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1rem;font-weight:700;letter-spacing:-.02em}
+.logo span{color:var(--accent-ko-light)}
+.lang-switcher{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px;margin-left:auto}
+.lang-btn{padding:.3rem .9rem;border-radius:7px;border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.lang-btn.active{background:var(--surface2);color:var(--text)}
+.lang-btn.ko.active{color:var(--accent-ko-light)}
+.lang-btn.ar.active{color:var(--accent-ar-light)}
+.streak-badge{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;font-size:.76rem;font-weight:700;color:var(--muted)}
+.streak-badge span{color:#fbbf24}
+main{max-width:720px;margin:0 auto;padding:1.2rem 1rem 4rem}
+.mode-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.mode-tab{flex:1;padding:.6rem .5rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.mode-tab.active{border-color:var(--accent-ko);color:var(--accent-ko-light);background:rgba(124,107,255,0.1)}
+.ar-mode .mode-tab.active{border-color:var(--accent-ar);color:var(--accent-ar-light);background:rgba(255,107,107,0.1)}
+.view{display:none}.view.active{display:block}
+
+/* Level selector (Korean only) */
+.level-bar{display:flex;gap:5px;margin-bottom:1rem;flex-wrap:wrap}
+.level-btn{padding:.38rem .85rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .18s}
+.level-btn.active{border-color:var(--accent-ko);color:var(--accent-ko-light);background:rgba(124,107,255,0.12)}
+
+/* Chart */
+.chart-section{margin-bottom:1.8rem}
+.section-label{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:7px}
+.char-cell{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.55rem .3rem;text-align:center;cursor:pointer;transition:all .18s;position:relative}
+.char-cell:hover{border-color:var(--accent-ko);background:rgba(124,107,255,0.08);transform:translateY(-2px)}
+.ar-mode .char-cell:hover{border-color:var(--accent-ar);background:rgba(255,107,107,0.08)}
+.char-cell.mastered{border-color:var(--success);background:rgba(74,222,128,0.06)}
+.char-big{font-size:1.6rem;line-height:1;margin-bottom:.25rem;display:block;font-family:'Noto Sans KR',sans-serif}
+.char-rom{font-size:.6rem;color:var(--muted);font-weight:600}
+.char-cell.mastered .char-rom{color:var(--success)}
+.mastered-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--success);display:none}
+.char-cell.mastered .mastered-dot{display:block}
+
+/* Syllable grid — bigger cells */
+.syl-table-wrap{overflow-x:auto;margin-bottom:.8rem}
+.syl-table{border-collapse:separate;border-spacing:4px;min-width:500px}
+.syl-table th{font-size:.62rem;color:var(--muted);font-weight:700;padding:.3rem .4rem;text-align:center;letter-spacing:.05em}
+.syl-cell{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.4rem .3rem;text-align:center;cursor:pointer;transition:all .15s;min-width:52px}
+.syl-cell:hover{border-color:var(--accent-ko);background:rgba(124,107,255,0.1);transform:translateY(-1px)}
+.syl-cell.mastered{border-color:var(--success);background:rgba(74,222,128,0.06)}
+.syl-char{font-size:1.35rem;font-family:'Noto Sans KR',sans-serif;line-height:1;display:block}
+.syl-rom{font-size:.58rem;color:var(--muted)}
+.syl-cell.mastered .syl-rom{color:var(--success)}
+
+/* Batchim grid */
+.bat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px}
+.bat-cell{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6rem .5rem;cursor:pointer;transition:all .18s;position:relative}
+.bat-cell:hover{border-color:var(--accent-ko);background:rgba(124,107,255,0.08);transform:translateY(-2px)}
+.bat-cell.mastered{border-color:var(--success);background:rgba(74,222,128,0.06)}
+.bat-char{font-size:1.5rem;font-family:'Noto Sans KR',sans-serif;line-height:1;display:block;text-align:center;margin-bottom:.25rem}
+.bat-info{text-align:center}
+.bat-rom{font-size:.62rem;color:var(--muted);font-weight:600}
+.bat-meaning{font-size:.6rem;color:var(--muted);margin-top:.1rem}
+.bat-cell.mastered .bat-rom{color:var(--success)}
+.bat-cell .mastered-dot{top:4px;right:4px}
+
+/* Arabic */
+.ar-char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.ar-cell{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem .5rem;cursor:pointer;transition:all .18s;position:relative;display:flex;align-items:center;gap:.5rem}
+.ar-cell:hover{border-color:var(--accent-ar);background:rgba(255,107,107,0.08);transform:translateY(-2px)}
+.ar-cell.mastered{border-color:var(--success);background:rgba(74,222,128,0.06)}
+.ar-char-big{font-size:1.6rem;font-family:'Noto Sans Arabic',sans-serif;line-height:1}
+.ar-info{flex:1;min-width:0}
+.ar-name{font-size:.65rem;font-weight:700;color:var(--text)}
+.ar-rom{font-size:.6rem;color:var(--muted)}
+.ar-forms{font-size:.58rem;color:var(--muted);margin-top:.1rem}
+.ar-cell.mastered .ar-rom{color:var(--success)}
+
+/* Popup */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:center;justify-content:center;padding:1.2rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.popup-overlay.show{opacity:1;pointer-events:all}
+.popup{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:420px;width:100%;text-align:center;transform:translateY(12px) scale(0.97);transition:transform .25s;max-height:90vh;overflow-y:auto}
+.popup-overlay.show .popup{transform:translateY(0) scale(1)}
+.popup-char{font-size:5rem;line-height:1;margin-bottom:.4rem;font-family:'Noto Sans KR',sans-serif}
+.popup-char.ar{font-family:'Noto Sans Arabic',sans-serif}
+.popup-rom{font-size:1.3rem;font-weight:700;margin-bottom:.25rem}
+.popup-name{font-size:.8rem;color:var(--muted);margin-bottom:.3rem}
+.popup-examples{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem;margin:.8rem 0;text-align:left}
+.popup-ex-title{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.popup-ex-item{font-size:.83rem;margin-bottom:.25rem;line-height:1.5}
+.popup-ex-item .ex-char{font-size:1.05rem;font-family:'Noto Sans KR',sans-serif}
+.popup-ex-item .ex-char.ar{font-family:'Noto Sans Arabic',sans-serif;font-size:1.3rem}
+.popup-btn-row{display:flex;gap:8px}
+.popup-btn{flex:1;padding:.6rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s}
+.popup-btn.primary{border-color:var(--accent-ko);color:var(--accent-ko-light);background:rgba(124,107,255,0.12)}
+.ar-mode .popup-btn.primary{border-color:var(--accent-ar);color:var(--accent-ar-light);background:rgba(255,107,107,0.12)}
+.popup-btn.close-btn{color:var(--muted)}
+
+/* Flashcard */
+.flashcard-wrap{perspective:1000px;margin-bottom:1rem}
+.flashcard{background:var(--surface);border:1.5px solid var(--border);border-radius:22px;padding:2.5rem 2rem;text-align:center;cursor:pointer;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .22s;position:relative}
+.flashcard:hover{transform:translateY(-3px)}
+.fc-char{font-size:5rem;line-height:1;margin-bottom:.7rem;font-family:'Noto Sans KR',sans-serif}
+.fc-char.ar{font-family:'Noto Sans Arabic',sans-serif}
+.fc-hint{font-size:.72rem;color:var(--muted)}
+.fc-reveal{font-size:1.5rem;font-weight:700;color:var(--accent-ko-light)}
+.fc-sublabel{font-size:.75rem;color:var(--muted);margin-top:.25rem}
+.ar-mode .fc-reveal{color:var(--accent-ar-light)}
+.fc-nav{display:flex;gap:8px;justify-content:center;margin-bottom:.7rem}
+.fc-btn{padding:.55rem 1.1rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s}
+.fc-btn:hover{border-color:var(--accent-ko);color:var(--accent-ko-light)}
+.ar-mode .fc-btn:hover{border-color:var(--accent-ar);color:var(--accent-ar-light)}
+.fc-counter{text-align:center;font-size:.74rem;color:var(--muted)}
+
+/* Quiz */
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.8rem 1.5rem;text-align:center;margin-bottom:1rem}
+.quiz-progress-bar{background:var(--border);border-radius:100px;height:5px;margin-bottom:1.5rem;overflow:hidden}
+.quiz-progress-fill{height:100%;background:var(--accent-ko);border-radius:100px;transition:width .5s}
+.ar-mode .quiz-progress-fill{background:var(--accent-ar)}
+.quiz-char-display{font-size:5.5rem;line-height:1;margin-bottom:.8rem;font-family:'Noto Sans KR',sans-serif}
+.quiz-char-display.ar{font-family:'Noto Sans Arabic',sans-serif}
+.quiz-prompt{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.quiz-option{padding:.85rem;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Noto Sans KR','Space Grotesk',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .18s;line-height:1.3}
+.quiz-option:hover:not(:disabled){border-color:var(--accent-ko);background:rgba(124,107,255,0.1)}
+.ar-mode .quiz-option:hover:not(:disabled){border-color:var(--accent-ar);background:rgba(255,107,107,0.1)}
+.quiz-option.correct{border-color:var(--success);background:rgba(74,222,128,0.12);color:var(--success)}
+.quiz-option.wrong{border-color:var(--fail);background:rgba(248,113,113,0.1);color:var(--fail)}
+.quiz-option:disabled{cursor:default}
+.quiz-feedback{min-height:2.5rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;margin-bottom:.5rem}
+.quiz-stats{display:flex;gap:8px;margin-bottom:1rem}
+.quiz-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem;text-align:center}
+.quiz-stat-num{font-size:1.2rem;font-weight:700}
+.quiz-stat-label{font-size:.65rem;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s}
+.btn:hover{opacity:.8}
+.btn-primary{border-color:var(--accent-ko);color:var(--accent-ko-light);background:rgba(124,107,255,0.12)}
+.ar-mode .btn-primary{border-color:var(--accent-ar);color:var(--accent-ar-light);background:rgba(255,107,107,0.12)}
+
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:.7rem 1.2rem;font-size:.84rem;font-weight:600;z-index:300;transition:transform .3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.good{border-color:var(--success);color:var(--success)}
+#toast.bad{border-color:var(--fail);color:var(--fail)}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+.pop{animation:pop .2s ease}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Script<span>Master</span></div>
+  <div class="lang-switcher">
+    <button class="lang-btn ko active" onclick="setLang('ko')">🇰🇷 한글</button>
+    <button class="lang-btn ar" onclick="setLang('ar')">🇸🇦 عربي</button>
+  </div>
+  <div class="streak-badge">🔥 <span id="streak-num">0</span></div>
+</header>
+<main id="main">
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('chart',this)">📋 一覧</button>
+    <button class="mode-tab" onclick="setMode('flash',this)">🃏 暗記</button>
+    <button class="mode-tab" onclick="setMode('quiz',this)">✏️ クイズ</button>
+  </div>
+  <div class="view active" id="view-chart"></div>
+  <div class="view" id="view-flash">
+    <div id="ko-level-bar-flash" class="level-bar" style="display:none">
+      <span style="font-size:.72rem;color:var(--muted);align-self:center;margin-right:.3rem">範囲：</span>
+      <button class="level-btn" onclick="setFcLevel('jamo')">字母のみ</button>
+      <button class="level-btn active" onclick="setFcLevel('syl')">音節（子＋母）</button>
+      <button class="level-btn" onclick="setFcLevel('bat')">パッチム付き</button>
+      <button class="level-btn" onclick="setFcLevel('all')">すべて</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-char" id="fc-char"></div>
+        <div class="fc-hint" id="fc-hint">タップして読み方を確認</div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-btn" onclick="fcMove(-1)">← 前</button>
+      <button class="fc-btn" onclick="fcShuffle()">🔀 シャッフル</button>
+      <button class="fc-btn" onclick="fcMove(1)">次 →</button>
+    </div>
+    <div class="fc-counter" id="fc-counter"></div>
+  </div>
+  <div class="view" id="view-quiz">
+    <div id="ko-level-bar-quiz" class="level-bar" style="display:none">
+      <span style="font-size:.72rem;color:var(--muted);align-self:center;margin-right:.3rem">範囲：</span>
+      <button class="level-btn" onclick="setQuizLevel('jamo')">字母のみ</button>
+      <button class="level-btn active" onclick="setQuizLevel('syl')">音節（子＋母）</button>
+      <button class="level-btn" onclick="setQuizLevel('bat')">パッチム付き</button>
+      <button class="level-btn" onclick="setQuizLevel('all')">すべて</button>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-prog"></div></div>
+      <div class="quiz-char-display" id="quiz-char"></div>
+      <div class="quiz-prompt" id="quiz-prompt">この文字の読み方は？</div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+    </div>
+    <div class="quiz-stats">
+      <div class="quiz-stat"><div class="quiz-stat-num" id="q-correct">0</div><div class="quiz-stat-label">✅ 正解</div></div>
+      <div class="quiz-stat"><div class="quiz-stat-num" id="q-wrong">0</div><div class="quiz-stat-label">❌ 不正解</div></div>
+      <div class="quiz-stat"><div class="quiz-stat-num" id="q-streak">0</div><div class="quiz-stat-label">🔥 連続</div></div>
+    </div>
+    <div style="text-align:center"><button class="btn btn-primary" onclick="startQuiz()">🔄 リセット</button></div>
+  </div>
+</main>
+
+<div class="popup-overlay" id="popup-overlay" onclick="closePopup(event)">
+  <div class="popup" id="popup">
+    <div class="popup-char" id="popup-char"></div>
+    <div class="popup-rom" id="popup-rom"></div>
+    <div class="popup-name" id="popup-name"></div>
+    <div class="popup-examples" id="popup-examples"></div>
+    <div class="popup-btn-row">
+      <button class="popup-btn close-btn" onclick="closePopupDirect()">閉じる</button>
+      <button class="popup-btn primary" id="popup-master-btn" onclick="toggleMaster()">⭐ 覚えた！</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// DATA: 字母
+// ============================================================
+const HANGUL_VOWELS = [
+  {char:'ㅏ',rom:'a',name:'ア',type:'jamo',ex:[{char:'아',rom:'a',meaning:'あ'}]},
+  {char:'ㅑ',rom:'ya',name:'ヤ',type:'jamo',ex:[{char:'야',rom:'ya',meaning:'やあ！'}]},
+  {char:'ㅓ',rom:'eo',name:'オ（後退）',type:'jamo',ex:[{char:'어',rom:'eo',meaning:'えっ？'}]},
+  {char:'ㅕ',rom:'yeo',name:'ヨ',type:'jamo',ex:[{char:'여',rom:'yeo',meaning:'はい（女性）'}]},
+  {char:'ㅗ',rom:'o',name:'オ（前進）',type:'jamo',ex:[{char:'오',rom:'o',meaning:'五'}]},
+  {char:'ㅛ',rom:'yo',name:'ヨ',type:'jamo',ex:[{char:'요',rom:'yo',meaning:'（丁寧語尾）'}]},
+  {char:'ㅜ',rom:'u',name:'ウ（前進）',type:'jamo',ex:[{char:'우',rom:'u',meaning:'雨/右'}]},
+  {char:'ㅠ',rom:'yu',name:'ユ',type:'jamo',ex:[{char:'유',rom:'yu',meaning:'油'}]},
+  {char:'ㅡ',rom:'eu',name:'ウ（後退）',type:'jamo',ex:[{char:'으',rom:'eu',meaning:'（語幹）'}]},
+  {char:'ㅣ',rom:'i',name:'イ',type:'jamo',ex:[{char:'이',rom:'i',meaning:'二/歯'}]},
+  {char:'ㅐ',rom:'ae',name:'エ',type:'jamo',ex:[{char:'개',rom:'gae',meaning:'犬'}]},
+  {char:'ㅔ',rom:'e',name:'エ',type:'jamo',ex:[{char:'네',rom:'ne',meaning:'はい'}]},
+  {char:'ㅘ',rom:'wa',name:'ワ',type:'jamo',ex:[{char:'봐',rom:'bwa',meaning:'見る'}]},
+  {char:'ㅝ',rom:'wo',name:'ウォ',type:'jamo',ex:[{char:'원',rom:'won',meaning:'ウォン'}]},
+  {char:'ㅚ',rom:'oe',name:'ウェ',type:'jamo',ex:[{char:'외',rom:'oe',meaning:'外'}]},
+  {char:'ㅟ',rom:'wi',name:'ウィ',type:'jamo',ex:[{char:'쉬',rom:'swi',meaning:'休む'}]},
+  {char:'ㅢ',rom:'ui',name:'ウィ',type:'jamo',ex:[{char:'의',rom:'ui',meaning:'の（助詞）'}]},
+  {char:'ㅒ',rom:'yae',name:'イェ',type:'jamo',ex:[{char:'얘',rom:'yae',meaning:'この子'}]},
+  {char:'ㅖ',rom:'ye',name:'イェ',type:'jamo',ex:[{char:'예',rom:'ye',meaning:'礼/はい'}]},
+  {char:'ㅙ',rom:'wae',name:'ウェ',type:'jamo',ex:[{char:'왜',rom:'wae',meaning:'なぜ'}]},
+];
+const HANGUL_CONSONANTS = [
+  {char:'ㄱ',rom:'g/k',name:'キウク',type:'jamo',ex:[{char:'가',rom:'ga',meaning:'行く'}]},
+  {char:'ㄴ',rom:'n',name:'ニウン',type:'jamo',ex:[{char:'나',rom:'na',meaning:'私'}]},
+  {char:'ㄷ',rom:'d/t',name:'ティグッ',type:'jamo',ex:[{char:'다',rom:'da',meaning:'全部'}]},
+  {char:'ㄹ',rom:'r/l',name:'リウル',type:'jamo',ex:[{char:'라',rom:'ra',meaning:'（語尾）'}]},
+  {char:'ㅁ',rom:'m',name:'ミウム',type:'jamo',ex:[{char:'마',rom:'ma',meaning:'魔'}]},
+  {char:'ㅂ',rom:'b/p',name:'ピウプ',type:'jamo',ex:[{char:'바',rom:'ba',meaning:'海'}]},
+  {char:'ㅅ',rom:'s',name:'シオッ',type:'jamo',ex:[{char:'사',rom:'sa',meaning:'四/人'}]},
+  {char:'ㅇ',rom:'ng/silent',name:'イウン',type:'jamo',ex:[{char:'아',rom:'a',meaning:'あ（無音）'}]},
+  {char:'ㅈ',rom:'j',name:'チウッ',type:'jamo',ex:[{char:'자',rom:'ja',meaning:'さあ'}]},
+  {char:'ㅊ',rom:'ch',name:'チウッ(激)',type:'jamo',ex:[{char:'차',rom:'cha',meaning:'車/茶'}]},
+  {char:'ㅋ',rom:'k',name:'キウク(激)',type:'jamo',ex:[{char:'카',rom:'ka',meaning:'カ'}]},
+  {char:'ㅌ',rom:'t',name:'ティグッ(激)',type:'jamo',ex:[{char:'타',rom:'ta',meaning:'乗る'}]},
+  {char:'ㅍ',rom:'p',name:'ピウプ(激)',type:'jamo',ex:[{char:'파',rom:'pa',meaning:'葱/波'}]},
+  {char:'ㅎ',rom:'h',name:'ヒウッ',type:'jamo',ex:[{char:'하',rom:'ha',meaning:'ハ/する'}]},
+  {char:'ㄲ',rom:'kk',name:'キウク(濃)',type:'jamo',ex:[{char:'까',rom:'kka',meaning:'まで'}]},
+  {char:'ㄸ',rom:'tt',name:'ティグッ(濃)',type:'jamo',ex:[{char:'따',rom:'tta',meaning:'暖かい'}]},
+  {char:'ㅃ',rom:'pp',name:'ピウプ(濃)',type:'jamo',ex:[{char:'빠',rom:'ppa',meaning:'速い'}]},
+  {char:'ㅆ',rom:'ss',name:'シオッ(濃)',type:'jamo',ex:[{char:'싸',rom:'ssa',meaning:'安い'}]},
+  {char:'ㅉ',rom:'jj',name:'チウッ(濃)',type:'jamo',ex:[{char:'짜',rom:'jja',meaning:'塩辛い'}]},
+];
+
+// ============================================================
+// DATA: 音節表（子音 × 母音 — 代表14子音 × 10母音）
+// ============================================================
+// 表の行（初声）と列（中声）
+const SYL_CONS = [
+  {j:'ㄱ',r:'g/k'},{j:'ㄴ',r:'n'},{j:'ㄷ',r:'d'},{j:'ㄹ',r:'r/l'},
+  {j:'ㅁ',r:'m'},{j:'ㅂ',r:'b'},{j:'ㅅ',r:'s'},{j:'ㅇ',r:'（無音）'},
+  {j:'ㅈ',r:'j'},{j:'ㅊ',r:'ch'},{j:'ㅋ',r:'k'},{j:'ㅌ',r:'t'},
+  {j:'ㅍ',r:'p'},{j:'ㅎ',r:'h'},
+];
+const SYL_VOWS = [
+  {j:'ㅏ',r:'a'},{j:'ㅑ',r:'ya'},{j:'ㅓ',r:'eo'},{j:'ㅕ',r:'yeo'},
+  {j:'ㅗ',r:'o'},{j:'ㅛ',r:'yo'},{j:'ㅜ',r:'u'},{j:'ㅠ',r:'yu'},
+  {j:'ㅡ',r:'eu'},{j:'ㅣ',r:'i'},
+];
+// 実際の音節文字（Unicode計算）
+function makeSyl(ci, vi){
+  // 初声index (19種), 中声index (21種)
+  const INIT = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  const MID  = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+  const ii = INIT.indexOf(ci);
+  const mi = MID.indexOf(vi);
+  if(ii<0||mi<0) return '?';
+  return String.fromCharCode(0xAC00 + ii*21*28 + mi*28);
+}
+// 音節データ生成（SYL_CONS×SYL_VOWS）
+const SYLLABLES = [];
+SYL_CONS.forEach(c => {
+  SYL_VOWS.forEach(v => {
+    const char = makeSyl(c.j, v.j);
+    const rom = (c.r==='（無音）'?'':c.r) + v.r;
+    SYLLABLES.push({
+      char, rom,
+      name: (c.r==='（無音）'?'':c.r)+' + '+v.r,
+      con: c.j, conR: c.r, vow: v.j, vowR: v.r,
+      type: 'syl',
+      ex:[]
+    });
+  });
+});
+
+// ============================================================
+// DATA: パッチム（終声）付き単語
+// ============================================================
+const BATCHIM_WORDS = [
+  // 3文字（子+母+終声1つ）
+  {char:'한',rom:'han',name:'ハン',meaning:'韓国/一',batchim:'ㄴ',batRom:'n',type:'bat',ex:[{char:'한국',rom:'han-guk',meaning:'韓国'}]},
+  {char:'국',rom:'guk',name:'グク',meaning:'国/スープ',batchim:'ㄱ',batRom:'k',type:'bat',ex:[{char:'한국',rom:'han-guk',meaning:'韓国'}]},
+  {char:'밥',rom:'bap',name:'バプ',meaning:'ご飯',batchim:'ㅂ',batRom:'p',type:'bat',ex:[{char:'밥 먹자',rom:'bap meokja',meaning:'ご飯食べよう'}]},
+  {char:'물',rom:'mul',name:'ムル',meaning:'水',batchim:'ㄹ',batRom:'l',type:'bat',ex:[{char:'냉수',rom:'naengsu',meaning:'冷水'}]},
+  {char:'산',rom:'san',name:'サン',meaning:'山',batchim:'ㄴ',batRom:'n',type:'bat',ex:[{char:'산악',rom:'sanak',meaning:'山岳'}]},
+  {char:'달',rom:'dal',name:'ダル',meaning:'月',batchim:'ㄹ',batRom:'l',type:'bat',ex:[{char:'달빛',rom:'dalbit',meaning:'月明かり'}]},
+  {char:'별',rom:'byeol',name:'ビョル',meaning:'星',batchim:'ㄹ',batRom:'l',type:'bat',ex:[{char:'별빛',rom:'byeolbit',meaning:'星明かり'}]},
+  {char:'집',rom:'jip',name:'チプ',meaning:'家',batchim:'ㅂ',batRom:'p',type:'bat',ex:[{char:'집사람',rom:'jipsaram',meaning:'家の人/妻'}]},
+  {char:'길',rom:'gil',name:'キル',meaning:'道',batchim:'ㄹ',batRom:'l',type:'bat',ex:[{char:'길거리',rom:'gilgeori',meaning:'道路/街'}]},
+  {char:'꽃',rom:'kkot',name:'コッ',meaning:'花',batchim:'ㅅ',batRom:'t',type:'bat',ex:[{char:'꽃밭',rom:'kkotbat',meaning:'花畑'}]},
+  {char:'책',rom:'chaek',name:'チェク',meaning:'本',batchim:'ㄱ',batRom:'k',type:'bat',ex:[{char:'책상',rom:'chaeksang',meaning:'机'}]},
+  {char:'손',rom:'son',name:'ソン',meaning:'手',batchim:'ㄴ',batRom:'n',type:'bat',ex:[{char:'손님',rom:'sonnim',meaning:'お客さん'}]},
+  {char:'눈',rom:'nun',name:'ヌン',meaning:'目/雪',batchim:'ㄴ',batRom:'n',type:'bat',ex:[{char:'눈사람',rom:'nunsaram',meaning:'雪だるま'}]},
+  {char:'입',rom:'ip',name:'イプ',meaning:'口',batchim:'ㅂ',batRom:'p',type:'bat',ex:[{char:'입술',rom:'ipsul',meaning:'唇'}]},
+  {char:'발',rom:'bal',name:'バル',meaning:'足',batchim:'ㄹ',batRom:'l',type:'bat',ex:[{char:'발음',rom:'bareum',meaning:'発音'}]},
+  {char:'말',rom:'mal',name:'マル',meaning:'言葉/馬',batchim:'ㄹ',batRom:'l',type:'bat',ex:[{char:'말하다',rom:'malhada',meaning:'言う・話す'}]},
+  {char:'밤',rom:'bam',name:'バム',meaning:'夜/栗',batchim:'ㅁ',batRom:'m',type:'bat',ex:[{char:'밤하늘',rom:'bamhaneul',meaning:'夜空'}]},
+  {char:'맘',rom:'mam',name:'マム',meaning:'心',batchim:'ㅁ',batRom:'m',type:'bat',ex:[{char:'마음',rom:'maeum',meaning:'心'}]},
+  {char:'돈',rom:'don',name:'ドン',meaning:'お金',batchim:'ㄴ',batRom:'n',type:'bat',ex:[{char:'돈가스',rom:'dongaseu',meaning:'とんかつ'}]},
+  {char:'빵',rom:'ppang',name:'パン',meaning:'パン',batchim:'ㅇ',batRom:'ng',type:'bat',ex:[{char:'식빵',rom:'sikppang',meaning:'食パン'}]},
+  // 複合パッチム（4文字相当：子+母+終声2つ）
+  {char:'닭',rom:'dak',name:'ダク',meaning:'鶏（複合パッチム ㄱ+ㅅ→ㄱ）',batchim:'ㄺ',batRom:'lk→k',type:'bat4',ex:[{char:'닭갈비',rom:'dakgalbi',meaning:'タッカルビ'}]},
+  {char:'흙',rom:'heuk',name:'フク',meaning:'土（複合パッチム ㄱ+ㅅ→ㄱ）',batchim:'ㄺ',batRom:'lk',type:'bat4',ex:[{char:'흙탕물',rom:'heuktangmul',meaning:'泥水'}]},
+  {char:'넋',rom:'neok',name:'ノク',meaning:'魂（複合パッチム ㄱ+ㅅ→ㄱ）',batchim:'ㄳ',batRom:'gs→k',type:'bat4',ex:[{char:'넋두리',rom:'neokduri',meaning:'愚痴'}]},
+  {char:'삶',rom:'sam',name:'サム',meaning:'人生・生（複合パッチム ㄹ+ㅁ→ㅁ）',batchim:'ㄻ',batRom:'lm→m',type:'bat4',ex:[{char:'삶의 질',rom:'samui jil',meaning:'生活の質'}]},
+  {char:'읽',rom:'ik',name:'イク',meaning:'読む語幹（複합パッチム ㄱ+ㅅ）',batchim:'ㄺ',batRom:'lk',type:'bat4',ex:[{char:'읽다',rom:'ikda',meaning:'読む'}]},
+  {char:'앉',rom:'an',name:'アン',meaning:'座る語幹（複합パッチム ㄴ+ㅈ）',batchim:'ㄵ',batRom:'nj→n',type:'bat4',ex:[{char:'앉다',rom:'anda',meaning:'座る'}]},
+  {char:'없',rom:'eop',name:'オプ',meaning:'ない語幹（複합パッチム ㅂ+ㅅ）',batchim:'ㄼ',batRom:'bs→p',type:'bat4',ex:[{char:'없다',rom:'eopda',meaning:'ない/いない'}]},
+  {char:'젊',rom:'jeom',name:'チョム',meaning:'若い語幹（複합パッチム ㄹ+ㅁ）',batchim:'ㄻ',batRom:'lm→m',type:'bat4',ex:[{char:'젊다',rom:'jeomda',meaning:'若い'}]},
+];
+
+// ============================================================
+// Arabic data (same as before)
+// ============================================================
+const ARABIC_LETTERS=[{char:'ا',name:'アリフ',nameJP:'「牛」を意味する古代文字が起源',rom:'ā / -',f1:'ا',f2:'ـا',f3:'ـا',f4:'ا',connected:false,note:'語頭では長母音ā（または無音の支柱）',ex:[{char:'أب',rom:'ab',meaning:'父'},{char:'باب',rom:'bāb',meaning:'ドア'}]},{char:'ب',name:'バー',nameJP:'「家」を意味するベートが起源',rom:'b',f1:'بـ',f2:'ـبـ',f3:'ـب',f4:'ب',connected:true,note:'点が1つ（下）',ex:[{char:'باب',rom:'bāb',meaning:'ドア'}]},{char:'ت',name:'ター',nameJP:'「しるし」を意味する文字が起源',rom:'t',f1:'تـ',f2:'ـتـ',f3:'ـت',f4:'ت',connected:true,note:'点が2つ（上）',ex:[{char:'بيت',rom:'bayt',meaning:'家'}]},{char:'ث',name:'サー',nameJP:'ターの変形',rom:'th',f1:'ثـ',f2:'ـثـ',f3:'ـث',f4:'ث',connected:true,note:'点が3つ（上）。英語 "think" のth音',ex:[{char:'ثلاثة',rom:'thalātha',meaning:'三'}]},{char:'ج',name:'ジーム',nameJP:'「ラクダ」を意味する古代文字が起源',rom:'j',f1:'جـ',f2:'ـجـ',f3:'ـج',f4:'ج',connected:true,note:'点が1つ（下・内側）',ex:[{char:'جمل',rom:'jamal',meaning:'ラクダ'}]},{char:'ح',name:'ハー',nameJP:'「垣根」を意味する文字が起源',rom:'ḥ',f1:'حـ',f2:'ـحـ',f3:'ـح',f4:'ح',connected:true,note:'点なし。喉の奥から出す強いh音',ex:[{char:'حياة',rom:'ḥayāt',meaning:'生命'}]},{char:'خ',name:'ハー（点あり）',nameJP:'ハーの変形',rom:'kh',f1:'خـ',f2:'ـخـ',f3:'ـخ',f4:'خ',connected:true,note:'点が1つ（上）。ドイツ語 "Bach" のch音',ex:[{char:'خبز',rom:'khubz',meaning:'パン'}]},{char:'د',name:'ダール',nameJP:'「ドア/扉」を意味する文字が起源',rom:'d',f1:'د',f2:'ـد',f3:'ـد',f4:'د',connected:false,note:'右接続のみ',ex:[{char:'دار',rom:'dār',meaning:'家'}]},{char:'ذ',name:'ザール',nameJP:'ダールの変形',rom:'dh',f1:'ذ',f2:'ـذ',f3:'ـذ',f4:'ذ',connected:false,note:'右接続のみ。英語 "this" のth音（有声）',ex:[{char:'ذهب',rom:'dhahab',meaning:'金'}]},{char:'ر',name:'ラー',nameJP:'「頭」を意味する文字が起源',rom:'r',f1:'ر',f2:'ـر',f3:'ـر',f4:'ر',connected:false,note:'右接続のみ。巻き舌のr音',ex:[{char:'رجل',rom:'rajul',meaning:'男'}]},{char:'ز',name:'ザーイン',nameJP:'「武器」を意味する文字が起源',rom:'z',f1:'ز',f2:'ـز',f3:'ـز',f4:'ز',connected:false,note:'右接続のみ',ex:[{char:'زيت',rom:'zayt',meaning:'油'}]},{char:'س',name:'スィーン',nameJP:'「歯」を意味する文字が起源',rom:'s',f1:'سـ',f2:'ـسـ',f3:'ـس',f4:'س',connected:true,note:'3つの波型が特徴',ex:[{char:'سلام',rom:'salām',meaning:'平和'}]},{char:'ش',name:'シーン',nameJP:'スィーンの変形',rom:'sh',f1:'شـ',f2:'ـشـ',f3:'ـش',f4:'ش',connected:true,note:'سに点3つ（上）',ex:[{char:'شمس',rom:'shams',meaning:'太陽'}]},{char:'ص',name:'サード',nameJP:'強調音のサード',rom:'ṣ',f1:'صـ',f2:'ـصـ',f3:'ـص',f4:'ص',connected:true,note:'強調音のs',ex:[{char:'صبح',rom:'ṣubḥ',meaning:'朝'}]},{char:'ض',name:'ダード',nameJP:'強調音のダード',rom:'ḍ',f1:'ضـ',f2:'ـضـ',f3:'ـض',f4:'ض',connected:true,note:'強調音のd',ex:[{char:'ضوء',rom:'ḍawʾ',meaning:'光'}]},{char:'ط',name:'ター（強調）',nameJP:'強調音のター',rom:'ṭ',f1:'طـ',f2:'ـطـ',f3:'ـط',f4:'ط',connected:true,note:'強調音のt',ex:[{char:'طيب',rom:'ṭayyib',meaning:'良い'}]},{char:'ظ',name:'ザー（強調）',nameJP:'強調音のザー',rom:'ẓ',f1:'ظـ',f2:'ـظـ',f3:'ـظ',f4:'ظ',connected:true,note:'強調音のdh',ex:[{char:'ظل',rom:'ẓill',meaning:'影'}]},{char:'ع',name:'アイン',nameJP:'「目」を意味する文字が起源',rom:'ʿ',f1:'عـ',f2:'ـعـ',f3:'ـع',f4:'ع',connected:true,note:'喉を締めて出す特殊な母音音',ex:[{char:'عربي',rom:'ʿarabī',meaning:'アラビア語'}]},{char:'غ',name:'ガイン',nameJP:'アインの変形',rom:'gh',f1:'غـ',f2:'ـغـ',f3:'ـغ',f4:'غ',connected:true,note:'フランス語の巻き舌rに近い音',ex:[{char:'غداء',rom:'ghadāʾ',meaning:'昼食'}]},{char:'ف',name:'ファー',nameJP:'「口」を意味する文字が起源',rom:'f',f1:'فـ',f2:'ـفـ',f3:'ـف',f4:'ف',connected:true,note:'点が1つ（上）',ex:[{char:'فيل',rom:'fīl',meaning:'象'}]},{char:'ق',name:'カーフ（uvular）',nameJP:'「針の穴」を意味する文字が起源',rom:'q',f1:'قـ',f2:'ـقـ',f3:'ـق',f4:'ق',connected:true,note:'点が2つ（上）。喉の奥で発音するk音',ex:[{char:'قمر',rom:'qamar',meaning:'月'}]},{char:'ك',name:'カーフ',nameJP:'「手のひら」を意味する文字が起源',rom:'k',f1:'كـ',f2:'ـكـ',f3:'ـك',f4:'ك',connected:true,note:'語中・語末では上部に斜線が入る',ex:[{char:'كتاب',rom:'kitāb',meaning:'本'}]},{char:'ل',name:'ラーム',nameJP:'「鞭/棒」を意味する文字が起源',rom:'l',f1:'لـ',f2:'ـلـ',f3:'ـل',f4:'ل',connected:true,note:'定冠詞 الに使われる重要な文字',ex:[{char:'ليل',rom:'layl',meaning:'夜'}]},{char:'م',name:'ミーム',nameJP:'「水」を意味する文字が起源',rom:'m',f1:'مـ',f2:'ـمـ',f3:'ـم',f4:'م',connected:true,note:'丸い形が特徴',ex:[{char:'ماء',rom:'māʾ',meaning:'水'}]},{char:'ن',name:'ヌーン',nameJP:'「魚/ヘビ」を意味する文字が起源',rom:'n',f1:'نـ',f2:'ـنـ',f3:'ـن',f4:'ن',connected:true,note:'点が1つ（上）',ex:[{char:'نور',rom:'nūr',meaning:'光'}]},{char:'ه',name:'ハー',nameJP:'「窓」を意味する文字が起源',rom:'h',f1:'هـ',f2:'ـهـ',f3:'ـه',f4:'ه',connected:true,note:'位置によって形が大きく変わる',ex:[{char:'هواء',rom:'hawāʾ',meaning:'空気'}]},{char:'و',name:'ワーウ',nameJP:'「釘/鉤」を意味する文字が起源',rom:'w / ū',f1:'و',f2:'ـو',f3:'ـو',f4:'و',connected:false,note:'右接続のみ。子音wまたは長母音ū',ex:[{char:'وردة',rom:'warda',meaning:'バラ'}]},{char:'ي',name:'ヤー',nameJP:'「手」を意味する文字が起源',rom:'y / ī',f1:'يـ',f2:'ـيـ',f3:'ـي',f4:'ي',connected:true,note:'子音yまたは長母音ī',ex:[{char:'يد',rom:'yad',meaning:'手'}]}];
+
+const HARAKAT=[{mark:'َ',name:'ファトハ',rom:'a',demo:'كَ',demophone:'ka',desc:'子音の上に置く。短母音「ア」'},{mark:'ِ',name:'カスラ',rom:'i',demo:'كِ',demophone:'ki',desc:'子音の下に置く。短母音「イ」'},{mark:'ُ',name:'ダンマ',rom:'u',demo:'كُ',demophone:'ku',desc:'子音の上に置く。短母音「ウ」'},{mark:'ً',name:'タンウィーン・ファトハ',rom:'an',demo:'كً',demophone:'kan',desc:'名詞語尾「アン」。不定形の語尾'},{mark:'ٍ',name:'タンウィーン・カスラ',rom:'in',demo:'كٍ',demophone:'kin',desc:'名詞語尾「イン」。不定形の語尾'},{mark:'ٌ',name:'タンウィーン・ダンマ',rom:'un',demo:'كٌ',demophone:'kun',desc:'名詞語尾「ウン」。不定形の語尾'},{mark:'ْ',name:'スクーン',rom:'（母音なし）',demo:'كْ',demophone:'k のみ',desc:'母音がないことを示す。子音クラスター'},{mark:'ّ',name:'シャッダ',rom:'（重子音）',demo:'كّ',demophone:'kk',desc:'子音を二重にする。例：مدرِّس（先生）'}];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentLang='ko', currentMode='chart';
+let mastered=JSON.parse(localStorage.getItem('sm_mastered')||'{}');
+let streak=parseInt(localStorage.getItem('sm_streak')||'0');
+let popupItem=null;
+let quizItems=[],quizIdx=0,qCorrect=0,qWrong=0,qStreak=0;
+let fcItems=[],fcIdx=0,fcFlipped=false;
+let koQuizLevel='syl', koFcLevel='syl';
+
+function g(id){return document.getElementById(id)}
+
+// ============================================================
+// ITEM SETS BY LEVEL
+// ============================================================
+function getKoItems(level){
+  const jamo=[...HANGUL_VOWELS,...HANGUL_CONSONANTS];
+  const syl=SYLLABLES;
+  const bat=BATCHIM_WORDS;
+  if(level==='jamo') return jamo;
+  if(level==='syl')  return syl;
+  if(level==='bat')  return bat;
+  return [...jamo,...syl,...bat]; // all
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init(){
+  g('streak-num').textContent=streak;
+  renderChart();
+  buildFcItems();
+  renderFlash();
+}
+
+function setLang(lang){
+  currentLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.lang-btn.'+lang).classList.add('active');
+  g('main').className=lang==='ar'?'ar-mode':'';
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mode-tab')[0].classList.add('active');
+  currentMode='chart';
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  g('view-chart').classList.add('active');
+  updateLevelBars();
+  renderChart();
+  buildFcItems();
+  renderFlash();
+  startQuiz();
+}
+
+function setMode(mode,btn){
+  currentMode=mode;
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  g('view-'+mode).classList.add('active');
+  updateLevelBars();
+  if(mode==='flash'){buildFcItems();renderFlash();}
+  if(mode==='quiz'){startQuiz();}
+}
+
+function updateLevelBars(){
+  const isKo=currentLang==='ko';
+  const flashBar=g('ko-level-bar-flash');
+  const quizBar=g('ko-level-bar-quiz');
+  if(flashBar) flashBar.style.display=(isKo&&currentMode==='flash')?'flex':'none';
+  if(quizBar)  quizBar.style.display=(isKo&&currentMode==='quiz')?'flex':'none';
+}
+
+function setFcLevel(level){
+  koFcLevel=level;
+  document.querySelectorAll('#ko-level-bar-flash .level-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  buildFcItems();
+  renderFlash();
+}
+function setQuizLevel(level){
+  koQuizLevel=level;
+  document.querySelectorAll('#ko-level-bar-quiz .level-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  startQuiz();
+}
+
+// ============================================================
+// CHART
+// ============================================================
+function mastKey(lang,char){return lang+'_'+char}
+function isMastered(char){return !!mastered[mastKey(currentLang,char)]}
+
+function renderChart(){
+  const el=g('view-chart');
+  if(currentLang==='ko'){
+    el.innerHTML=`
+      <div class="chart-section">
+        <div class="section-label">母音 (21)</div>
+        <div class="char-grid" id="grid-vowels"></div>
+      </div>
+      <div class="chart-section">
+        <div class="section-label">子音 (19)</div>
+        <div class="char-grid" id="grid-consonants"></div>
+      </div>
+      <div class="chart-section">
+        <div class="section-label">音節表 — 子音 × 母音（タップで詳細）</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem;margin-bottom:.8rem;font-size:.74rem;color:var(--muted);line-height:1.6">
+          ハングルは <b style="color:var(--accent-ko-light)">初声（子音）＋ 中声（母音）</b> を組み合わせて1文字を作ります。<br>
+          例： ㄱ + ㅏ = <span style="font-family:'Noto Sans KR',sans-serif;font-size:1rem;color:var(--text)">가</span>（ga）
+        </div>
+        <div class="syl-table-wrap"><table class="syl-table" id="syl-table"></table></div>
+      </div>
+      <div class="chart-section">
+        <div class="section-label">パッチム（終声）付き単語</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem;margin-bottom:.8rem;font-size:.74rem;color:var(--muted);line-height:1.6">
+          <b style="color:var(--accent-ko-light)">パッチム</b>は文字の下に置く子音です。<br>
+          <b style="color:var(--text)">3文字構成：</b> 초성(初声) + 중성(中声) + 종성(終声)　例：<span style="font-family:'Noto Sans KR',sans-serif;color:var(--text)">한 = ㅎ+ㅏ+ㄴ</span><br>
+          <b style="color:var(--text)">複合パッチム：</b>終声に子音が2つ重なる。例：<span style="font-family:'Noto Sans KR',sans-serif;color:var(--text)">닭 = ㄷ+ㅏ+ㄺ(ㄹ+ㄱ)</span>
+        </div>
+        <div class="bat-grid" id="bat-grid"></div>
+      </div>
+    `;
+    renderKoGrid('grid-vowels',HANGUL_VOWELS);
+    renderKoGrid('grid-consonants',HANGUL_CONSONANTS);
+    renderSylTable();
+    renderBatGrid();
+  } else {
+    el.innerHTML=`
+      <div class="chart-section">
+        <div class="section-label">アラビア文字 28文字（右から左）— タップで詳細</div>
+        <div class="ar-char-grid" id="grid-ar"></div>
+      </div>
+      <div class="chart-section" style="margin-top:1.5rem">
+        <div class="section-label">🔤 母音記号（ハラカート）</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;margin-bottom:.8rem;font-size:.76rem;color:var(--muted);line-height:1.7">
+          通常の文章では子音だけが書かれ、母音は推測します。<br>
+          初心者向けや聖典（クルアーン）では<b style="color:var(--accent-ar-light)">母音記号</b>が付けられます。
+        </div>
+        <div id="grid-harakat"></div>
+      </div>
+    `;
+    renderArGrid('grid-ar');
+    renderHarakatGrid('grid-harakat');
+  }
+}
+
+function renderKoGrid(gridId,items){
+  const grid=g(gridId);grid.innerHTML='';
+  items.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='char-cell'+(isMastered(item.char)?' mastered':'');
+    div.innerHTML=`<div class="mastered-dot"></div><span class="char-big">${item.char}</span><span class="char-rom">${item.rom}</span>`;
+    div.onclick=()=>openPopup(item,'ko');
+    grid.appendChild(div);
+  });
+}
+
+function renderSylTable(){
+  const tbl=g('syl-table');
+  // header row
+  let html='<tr><th></th>';
+  SYL_VOWS.forEach(v=>{ html+=`<th>${v.j}<br><span style="color:var(--accent-ko-light)">${v.r}</span></th>`; });
+  html+='</tr>';
+  SYL_CONS.forEach(c=>{
+    html+=`<tr><th style="text-align:right">${c.j}<br><span style="color:var(--accent-ko-light);font-size:.55rem">${c.r}</span></th>`;
+    SYL_VOWS.forEach(v=>{
+      const char=makeSyl(c.j,v.j);
+      const rom=(c.r==='（無音）'?'':c.r)+v.r;
+      const isMast=isMastered(char);
+      html+=`<td class="syl-cell${isMast?' mastered':''}" onclick="openPopupSyl('${char}','${rom}','${c.j}','${v.j}','${c.r}','${v.r}')">
+        <span class="syl-char">${char}</span>
+        <span class="syl-rom">${rom}</span>
+      </td>`;
+    });
+    html+='</tr>';
+  });
+  tbl.innerHTML=html;
+}
+
+function renderBatGrid(){
+  const grid=g('bat-grid');grid.innerHTML='';
+  BATCHIM_WORDS.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='bat-cell'+(isMastered(item.char)?' mastered':'');
+    const badge=item.type==='bat4'?'<span style="font-size:.55rem;background:rgba(251,191,36,0.15);color:#fbbf24;border-radius:4px;padding:.05rem .3rem;margin-left:.2rem">複合</span>':'';
+    div.innerHTML=`
+      <div class="mastered-dot"></div>
+      <span class="bat-char">${item.char}</span>
+      <div class="bat-info">
+        <span class="bat-rom">${item.rom}${badge}</span>
+        <div class="bat-meaning">${item.meaning}</div>
+      </div>
+    `;
+    div.onclick=()=>openPopup(item,'ko');
+    grid.appendChild(div);
+  });
+}
+
+function renderArGrid(gridId){
+  const grid=g(gridId);grid.innerHTML='';
+  ARABIC_LETTERS.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='ar-cell'+(isMastered(item.char)?' mastered':'');
+    div.innerHTML=`
+      <div class="mastered-dot"></div>
+      <div class="ar-char-big">${item.char}</div>
+      <div class="ar-info">
+        <div class="ar-name">${item.name}</div>
+        <div class="ar-rom">${item.rom}</div>
+        <div class="ar-forms">${item.f1} ${item.f2} ${item.f3}</div>
+      </div>
+    `;
+    div.onclick=()=>openPopup(item,'ar');
+    grid.appendChild(div);
+  });
+}
+
+function renderHarakatGrid(gridId){
+  const grid=g(gridId);grid.innerHTML='';
+  HARAKAT.forEach(h=>{
+    const div=document.createElement('div');
+    div.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem;margin-bottom:6px;display:flex;align-items:center;gap:.8rem;direction:rtl';
+    div.innerHTML=`
+      <div style="font-family:'Noto Sans Arabic',sans-serif;font-size:2.2rem;min-width:52px;text-align:center;color:var(--text)">${h.demo}</div>
+      <div style="flex:1;direction:ltr">
+        <div style="font-weight:700;font-size:.85rem">${h.name} <span style="color:var(--accent-ar-light);font-size:.8rem">「${h.rom}」</span></div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">${h.desc}</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">発音例: <span style="font-family:'Noto Sans Arabic',sans-serif;font-size:.95rem">${h.demo}</span> = ${h.demophone}</div>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ============================================================
+// POPUP
+// ============================================================
+function openPopupSyl(char,rom,cj,vj,cr,vr){
+  const item={char,rom,name:`${cj}(${cr}) + ${vj}(${vr})`,type:'syl',ex:[]};
+  openPopup(item,'ko');
+}
+
+function openPopup(item,lang){
+  popupItem={item,lang};
+  const isAr=lang==='ar';
+  const charEl=g('popup-char');
+  charEl.textContent=item.char;
+  charEl.className='popup-char'+(isAr?' ar':'');
+  g('popup-rom').textContent=item.rom;
+
+  if(isAr){
+    g('popup-name').innerHTML=`<span style="font-size:.92rem;font-weight:700;color:var(--text)">${item.name}</span><br><span style="font-size:.7rem;color:var(--muted)">${item.nameJP}</span>`;
+  } else if(item.type==='syl'){
+    // 音節の説明
+    g('popup-name').innerHTML=`<span style="font-size:.85rem;color:var(--muted)">組み合わせ：</span><span style="font-size:.9rem;font-weight:700"> ${item.name}</span>`;
+  } else if(item.type==='bat'||item.type==='bat4'){
+    g('popup-name').innerHTML=`<span style="font-size:.85rem;font-weight:700">${item.meaning}</span><br><span style="font-size:.74rem;color:var(--muted)">パッチム: <b style="color:var(--accent-ko-light)">${item.batchim}</b>（${item.batRom}）${item.type==='bat4'?' 〔複合パッチム〕':''}</span>`;
+  } else {
+    g('popup-name').textContent=item.name;
+  }
+
+  const masKey=mastKey(lang,item.char);
+  const btn=g('popup-master-btn');
+  btn.textContent=mastered[masKey]?'✅ 覚えた済み':'⭐ 覚えた！';
+
+  let exHtml='';
+  if(isAr){
+    if(item.note){
+      exHtml+=`<div style="background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.2);border-radius:8px;padding:.5rem .7rem;margin-bottom:.6rem;font-size:.76rem;color:var(--accent-ar-light)">💡 ${item.note}</div>`;
+    }
+    exHtml+=`
+      <div class="popup-ex-title" style="margin-bottom:.4rem">📝 字形（位置による変化）</div>
+      <table style="width:100%;border-collapse:separate;border-spacing:4px;margin-bottom:.7rem;direction:rtl;text-align:center">
+        <tr>
+          ${['語頭','語中','語末','独立'].map((label,i)=>{
+            const forms=[item.f1,item.f2,item.f3,item.f4];
+            const notes=['←接続',item.connected?'両側接続':'※右のみ','右→','単体'];
+            return `<td style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.35rem .2rem">
+              <div style="font-family:'Noto Sans Arabic',sans-serif;font-size:1.8rem;line-height:1">${forms[i]}</div>
+              <div style="font-size:.58rem;color:var(--muted);margin-top:.15rem">${label}</div>
+              <div style="font-size:.58rem;color:var(--accent-ar-light)">${notes[i]}</div>
+            </td>`;
+          }).join('')}
+        </tr>
+      </table>
+    `;
+  }
+
+  if(item.ex && item.ex.length){
+    exHtml+=`<div class="popup-ex-title">例単語</div>`;
+    item.ex.forEach(e=>{
+      exHtml+=`<div class="popup-ex-item"><span class="ex-char${isAr?' ar':''}">${e.char}</span> /${e.rom}/ — ${e.meaning}</div>`;
+    });
+  } else if(item.type==='syl'){
+    exHtml+=`<div style="font-size:.78rem;color:var(--muted);text-align:center;padding:.5rem">音節単体の例は暗記・クイズで練習しましょう</div>`;
+  }
+
+  g('popup-examples').innerHTML=exHtml;
+  g('popup-overlay').classList.add('show');
+}
+
+function toggleMaster(){
+  if(!popupItem) return;
+  const {item,lang}=popupItem;
+  const key=mastKey(lang,item.char);
+  const btn=g('popup-master-btn');
+  if(mastered[key]){
+    delete mastered[key];
+    btn.textContent='⭐ 覚えた！';
+    showToast('リセットしました');
+  } else {
+    mastered[key]=true;
+    btn.textContent='✅ 覚えた済み';
+    streak++;
+    g('streak-num').textContent=streak;
+    localStorage.setItem('sm_streak',streak);
+    showToast('🎉 覚えた！','good');
+  }
+  localStorage.setItem('sm_mastered',JSON.stringify(mastered));
+  renderChart();
+}
+
+function closePopup(e){if(e.target===g('popup-overlay'))closePopupDirect()}
+function closePopupDirect(){g('popup-overlay').classList.remove('show')}
+
+// ============================================================
+// FLASHCARD
+// ============================================================
+function buildFcItems(){
+  if(currentLang==='ar'){
+    fcItems=[...ARABIC_LETTERS].sort(()=>Math.random()-.5);
+  } else {
+    fcItems=[...getKoItems(koFcLevel)].sort(()=>Math.random()-.5);
+  }
+  fcIdx=0; fcFlipped=false;
+}
+
+function renderFlash(){
+  if(!fcItems.length) buildFcItems();
+  const item=fcItems[fcIdx%fcItems.length];
+  const charEl=g('fc-char');
+  charEl.textContent=item.char;
+  charEl.className='fc-char'+(currentLang==='ar'?' ar':'');
+  g('fc-hint').className='fc-hint';
+  g('fc-hint').textContent='タップして読み方を確認';
+  fcFlipped=false;
+  g('fc-counter').textContent=(fcIdx%fcItems.length+1)+' / '+fcItems.length;
+}
+
+function flipCard(){
+  const item=fcItems[fcIdx%fcItems.length];
+  fcFlipped=!fcFlipped;
+  const hintEl=g('fc-hint');
+  if(fcFlipped){
+    const fc=g('flashcard');
+    fc.classList.add('pop');
+    setTimeout(()=>fc.classList.remove('pop'),200);
+    hintEl.className='';
+    let sub='';
+    if(item.type==='syl') sub=`<div class="fc-sublabel">組み合わせ: ${item.name}</div>`;
+    else if(item.type==='bat'||item.type==='bat4') sub=`<div class="fc-sublabel">${item.meaning}　パッチム: ${item.batchim}(${item.batRom})</div>`;
+    else sub=`<div class="fc-sublabel">${item.name}</div>`;
+    hintEl.innerHTML=`<div class="fc-reveal">${item.rom}</div>${sub}`;
+  } else {
+    hintEl.className='fc-hint';
+    hintEl.textContent='タップして読み方を確認';
+  }
+}
+
+function fcMove(dir){
+  fcIdx=((fcIdx+dir)%fcItems.length+fcItems.length)%fcItems.length;
+  renderFlash();
+}
+function fcShuffle(){
+  buildFcItems();
+  showToast('🔀 シャッフルしました');
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function startQuiz(){
+  let pool;
+  if(currentLang==='ar'){
+    pool=ARABIC_LETTERS;
+  } else {
+    pool=getKoItems(koQuizLevel);
+  }
+  quizItems=[...pool].sort(()=>Math.random()-.5);
+  quizIdx=0; qCorrect=0; qWrong=0; qStreak=0;
+  updateQuizStats();
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const pool=currentLang==='ar'?ARABIC_LETTERS:getKoItems(koQuizLevel);
+  if(quizIdx>=quizItems.length){
+    g('quiz-char').textContent='🎉';
+    g('quiz-char').className='quiz-char-display';
+    g('quiz-options').innerHTML=`<div style="grid-column:1/-1;text-align:center;font-size:.9rem;color:var(--muted)">全問完了！リセットしてもう一度</div>`;
+    g('quiz-feedback').textContent='';
+    g('quiz-prog').style.width='100%';
+    return;
+  }
+  const current=quizItems[quizIdx];
+  g('quiz-prog').style.width=(quizIdx/quizItems.length*100).toFixed(0)+'%';
+  const charEl=g('quiz-char');
+  charEl.textContent=current.char;
+  charEl.className='quiz-char-display'+(currentLang==='ar'?' ar':'');
+  g('quiz-feedback').textContent='';
+
+  // promptテキスト
+  let promptText='この文字の読み方は？';
+  if(current.type==='syl') promptText='この音節の読み方は？（初声＋中声）';
+  else if(current.type==='bat'||current.type==='bat4') promptText='このパッチム付き文字の読み方は？';
+  g('quiz-prompt').textContent=promptText;
+
+  // 選択肢4つ（同じtype系から優先選択）
+  const sameType=pool.filter(i=>i.char!==current.char&&(currentLang==='ar'||i.type===current.type));
+  const otherType=pool.filter(i=>i.char!==current.char&&i.type!==current.type);
+  const decoys=[...sameType,...otherType].sort(()=>Math.random()-.5).slice(0,3);
+  const options=[current,...decoys].sort(()=>Math.random()-.5);
+
+  const optEl=g('quiz-options');
+  optEl.innerHTML='';
+  options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-option';
+    // 音節の場合はrom表示のみ
+    if(opt.type==='syl'){
+      btn.textContent=opt.rom;
+    } else if(opt.type==='bat'||opt.type==='bat4'){
+      btn.innerHTML=`${opt.rom}<br><span style="font-size:.72rem;color:var(--muted)">${opt.meaning}</span>`;
+    } else {
+      btn.textContent=opt.rom+(opt.name?' ('+opt.name+')':'');
+    }
+    btn.dataset.correct=(opt.char===current.char)?'1':'0';
+    btn.dataset.rom=current.rom;
+    btn.onclick=()=>answerQuiz(opt.char===current.char,btn,current.rom);
+    optEl.appendChild(btn);
+  });
+}
+
+function answerQuiz(correct,clickedBtn,correctRom){
+  document.querySelectorAll('.quiz-option').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.correct==='1') b.classList.add('correct');
+  });
+  if(correct){
+    clickedBtn.classList.add('correct');
+    qCorrect++; qStreak++;
+    g('quiz-feedback').textContent='✅ 正解！';
+    g('quiz-feedback').style.color='var(--success)';
+    if(!mastered[mastKey(currentLang,quizItems[quizIdx].char)]){
+      mastered[mastKey(currentLang,quizItems[quizIdx].char)]=true;
+      localStorage.setItem('sm_mastered',JSON.stringify(mastered));
+      streak++;
+      g('streak-num').textContent=streak;
+      localStorage.setItem('sm_streak',streak);
+    }
+  } else {
+    clickedBtn.classList.add('wrong');
+    qWrong++; qStreak=0;
+    g('quiz-feedback').textContent='❌ 不正解 → 正解: '+correctRom;
+    g('quiz-feedback').style.color='var(--fail)';
+  }
+  updateQuizStats();
+  setTimeout(()=>{quizIdx++;renderQuiz();},1200);
+}
+
+function updateQuizStats(){
+  g('q-correct').textContent=qCorrect;
+  g('q-wrong').textContent=qWrong;
+  g('q-streak').textContent=qStreak;
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg,type){
+  const t=g('toast');
+  t.textContent=msg;
+  t.className='show'+(type?' '+type:'');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.className='',2300);
+}
+
+init();
+
+// ============================================================
+// PWA SETUP — manifest + service worker (すべてインライン)
+// ============================================================
+(function(){
+  // SVGアイコン（紫背景に「S」）
+  const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+    <rect width="192" height="192" rx="40" fill="#0e0e12"/>
+    <rect width="192" height="192" rx="40" fill="url(#g)"/>
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#7c6bff"/>
+        <stop offset="100%" stop-color="#ff6b6b"/>
+      </linearGradient>
+    </defs>
+    <text x="96" y="130" text-anchor="middle" font-size="110" font-family="serif" font-weight="bold" fill="white">S</text>
+  </svg>`;
+  const iconDataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgIcon)));
+
+  // apple-touch-icon にセット
+  document.getElementById('pwa-icon').href = iconDataUrl;
+
+  // manifest をBlobで動的生成
+  const manifest = {
+    name: 'ScriptMaster — 文字マスター',
+    short_name: 'ScriptMaster',
+    description: 'ハングル・アラビア語文字学習アプリ',
+    start_url: '.',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#0e0e12',
+    theme_color: '#0e0e12',
+    icons: [
+      { src: iconDataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+    ]
+  };
+  const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  document.getElementById('pwa-manifest').href = URL.createObjectURL(manifestBlob);
+
+  // ページ本体をCache APIで直接キャッシュ（Service Worker不要）
+  if('caches' in window){
+    caches.open('scriptmaster-v1').then(cache => {
+      cache.add(window.location.href).catch(()=>{});
+    });
+  }
+})();
+
+// ============================================================
+// インストール促進バナー
+// ============================================================
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // バナーを少し遅らせて表示
+  setTimeout(showInstallBanner, 2000);
+});
+
+function showInstallBanner(){
+  if(!deferredPrompt) return;
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.style.cssText = 'position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:#1e1e26;border:1px solid #7c6bff;border-radius:14px;padding:.8rem 1.2rem;display:flex;align-items:center;gap:.8rem;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.6);max-width:340px;width:90%';
+  banner.innerHTML = `
+    <span style="font-size:1.3rem">📲</span>
+    <div style="flex:1">
+      <div style="font-size:.82rem;font-weight:700;color:#f0eef8">ホーム画面に追加</div>
+      <div style="font-size:.7rem;color:#6b6880">アプリとして使えます</div>
+    </div>
+    <button onclick="doInstall()" style="background:#7c6bff;color:#fff;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.78rem;font-weight:700;cursor:pointer">追加</button>
+    <button onclick="this.closest('#install-banner').remove()" style="background:none;border:none;color:#6b6880;font-size:1rem;cursor:pointer">✕</button>
+  `;
+  document.body.appendChild(banner);
+}
+
+function doInstall(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    const b = document.getElementById('install-banner');
+    if(b) b.remove();
+  });
+}
+
+// iOSの場合は手動手順を案内
+window.addEventListener('load', () => {
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  if(isIos && !isInStandalone){
+    setTimeout(() => {
+      const tip = document.createElement('div');
+      tip.style.cssText = 'position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:#1e1e26;border:1px solid #ff9b9b;border-radius:14px;padding:.9rem 1.2rem;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.6);max-width:320px;width:90%;text-align:center';
+      tip.innerHTML = `
+        <div style="font-size:.85rem;font-weight:700;color:#f0eef8;margin-bottom:.4rem">📲 iPhoneでアプリとして使う</div>
+        <div style="font-size:.76rem;color:#a99bff;line-height:1.6">
+          Safariで開いて<br>
+          <b style="color:#f0eef8">［共有 □↑］→「ホーム画面に追加」</b><br>
+          をタップしてください
+        </div>
+        <button onclick="this.parentElement.remove()" style="margin-top:.6rem;background:none;border:1px solid #2a2a36;border-radius:7px;color:#6b6880;font-size:.76rem;padding:.3rem .8rem;cursor:pointer">閉じる</button>
+      `;
+      document.body.appendChild(tip);
+    }, 2000);
+  }
+});
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fafaf8">
+<title>PApaPIpi クラブ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #fafaf8;
+  color: #1a1a1a;
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+}
+header {
+  text-align: center;
+  padding: 2.5rem 1.5rem 1.5rem;
+  border-bottom: 2px solid #efefed;
+}
+.club-title { font-size: 2rem; font-weight: 900; margin-bottom: .3rem; }
+.pa { color: #4f8ef7; }
+.pi { color: #f76fa0; }
+.club-sub { font-size: .8rem; color: #aaa; letter-spacing: .1em; }
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem 1.2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.room { border-radius: 18px; overflow: hidden; border: 1.5px solid #efefed; }
+.room-header { padding: .9rem 1.2rem; }
+.papa-header { background: #eef4ff; border-bottom: 1.5px solid #d4e5ff; }
+.pipi-header { background: #fff0f5; border-bottom: 1.5px solid #ffd6e7; }
+.room-title { font-size: 1rem; font-weight: 800; }
+.papa-header .room-title { color: #2f6fd4; }
+.pipi-header .room-title { color: #d94f84; }
+.app-list { background: #fff; }
+.app-link {
+  display: flex;
+  align-items: center;
+  padding: .95rem 1.2rem;
+  text-decoration: none;
+  color: #1a1a1a;
+  border-bottom: 1px solid #f0f0ee;
+  transition: background .15s;
+}
+.app-link:last-child { border-bottom: none; }
+.app-link:active { background: #f7f7f5; }
+.app-name { font-size: .9rem; font-weight: 700; flex: 1; }
+.app-arrow { color: #ccc; font-size: .9rem; }
+.app-link.soon { opacity: .4; pointer-events: none; }
+footer { text-align: center; font-size: .74rem; color: #bbb; padding-bottom: 2rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="club-title">
+    <span class="pa">PApa</span><span class="pi">PIpi</span>
+  </div>
+  <div class="club-sub">おうちアプリクラブ</div>
+</header>
+<main>
+  <div class="room">
+    <div class="room-header papa-header">
+      <span class="room-title">PAPAの部屋</span>
+    </div>
+    <div class="app-list">
+      <a class="app-link" href="moji-hangeularab.html">
+        <span class="app-name">文字マスター（韓国語・アラビア語）</span>
+        <span class="app-arrow">›</span>
+      </a>
+      <a class="app-link soon" href="#">
+        <span class="app-name">追加予定</span>
+      </a>
+    </div>
+  </div>
+  <div class="room">
+    <div class="room-header pipi-header">
+      <span class="room-title">PIPIの部屋</span>
+    </div>
+    <div class="app-list">
+      <a class="app-link" href="speakloop-turkish01.html">
+        <span class="app-name">会話練習01（トルコ語）</span>
+        <span class="app-arrow">›</span>
+      </a>
+      <a class="app-link soon" href="#">
+        <span class="app-name">追加予定</span>
+      </a>
+    </div>
+  </div>
+</main>
+<footer>PApaPIpi Club</footer>
+</body>
+</html>
