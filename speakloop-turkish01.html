@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>SpeakLoop — Türkçe</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -13,112 +13,142 @@ button{cursor:pointer;font-family:inherit}input{font-family:inherit}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .fade{animation:fadeUp .25s ease both}.pulsing{animation:blink .9s ease-in-out infinite}
-#header{background:#fff;border-bottom:1.5px solid #e2e0db;padding:0 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;min-height:56px;position:sticky;top:0;z-index:50}
-#logo{font-weight:900;font-size:1.15rem;letter-spacing:-.04em}
-.lang-toggle{display:flex;background:#f0ede8;border:1.5px solid #e2e0db;border-radius:100px;padding:3px;gap:2px;margin-left:auto}
-.lang-btn{padding:.28rem .85rem;border-radius:100px;border:none;font-weight:700;font-size:.8rem;background:transparent;color:#7a7060;transition:all .18s}
+
+#header{background:#fff;border-bottom:1.5px solid #e2e0db;padding:0 1.1rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;min-height:54px;position:sticky;top:0;z-index:50}
+#logo{font-weight:900;font-size:1.1rem;letter-spacing:-.04em}
 .stat{background:#f0ede8;border:1.5px solid #e2e0db;border-radius:7px;padding:.2rem .5rem;font-weight:700;font-size:.76rem}
-#main{max-width:640px;margin:0 auto;padding:1.2rem 1rem 4rem}
-#tabs{display:flex;gap:3px;background:#fff;border:1.5px solid #e2e0db;border-radius:12px;padding:4px;width:fit-content;margin-bottom:1.2rem}
-.tab{padding:.42rem .95rem;border-radius:9px;border:none;font-weight:700;font-size:.82rem;background:transparent;color:#7a7060;transition:all .18s}
+
+#main{max-width:640px;margin:0 auto;padding:1rem .9rem 5rem}
+
+/* TABS */
+#tabs{display:flex;gap:3px;background:#fff;border:1.5px solid #e2e0db;border-radius:12px;padding:4px;margin-bottom:1.1rem}
+.tab{flex:1;padding:.42rem .5rem;border-radius:9px;border:none;font-weight:700;font-size:.78rem;background:transparent;color:#7a7060;transition:all .18s;text-align:center}
 .tab.active{background:#1c1a15;color:#f7f5f0}
 .view{display:none}.view.active{display:block}
-.card{background:#fff;border:1.5px solid #e2e0db;border-radius:15px;padding:1.3rem 1.5rem;margin-bottom:1rem}
+
+/* SCENE FILTER */
+#scene-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:1rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#scene-bar::-webkit-scrollbar{display:none}
+.scene-btn{flex-shrink:0;border:1.5px solid #e2e0db;background:#fff;border-radius:100px;padding:.3rem .8rem;font-size:.75rem;font-weight:700;color:#7a7060;transition:all .18s;white-space:nowrap}
+.scene-btn.active{background:#c0392b;border-color:#c0392b;color:#fff}
+
+/* PHRASE CARD */
+.card{background:#fff;border:1.5px solid #e2e0db;border-radius:15px;padding:1.2rem 1.4rem;margin-bottom:.9rem}
 .cat-tag{font-size:.67rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:.18rem .6rem;border-radius:100px}
-.btn{padding:.52rem 1.05rem;border-radius:10px;font-weight:600;font-size:.83rem;border:1.5px solid #e2e0db;background:transparent;color:#1c1a15;transition:opacity .15s}
-.btn.primary{border:none;color:#fff}.btn:hover{opacity:.82}
-#record-area{background:#fff;border:1.5px dashed #ccc;border-radius:15px;padding:1.5rem 1.2rem;text-align:center;margin-bottom:1rem;transition:all .25s}
-#wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:48px;margin-bottom:1rem;opacity:.1;transition:opacity .3s}
-.bar{width:6px;border-radius:3px;transition:height .06s ease}
-#mic-btn{width:66px;height:66px;border-radius:50%;border:none;color:#fff;font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto .8rem;cursor:pointer;transition:all .2s}
-#transcript-box{background:#f7f5f0;border:1.5px solid #e2e0db;border-radius:12px;padding:.8rem 1.1rem;margin-bottom:.9rem;display:none}
+.btn{padding:.52rem 1rem;border-radius:10px;font-weight:600;font-size:.82rem;border:1.5px solid #e2e0db;background:transparent;color:#1c1a15;transition:opacity .15s}
+.btn.primary{border:none;color:#fff;background:#c0392b}.btn:active{opacity:.75}
+
+/* RECORD */
+#record-area{background:#fff;border:1.5px dashed #ccc;border-radius:15px;padding:1.4rem 1.1rem;text-align:center;margin-bottom:.9rem;transition:all .25s}
+#wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:44px;margin-bottom:.9rem;opacity:.1;transition:opacity .3s}
+.bar{width:5px;border-radius:3px;transition:height .06s ease}
+#mic-btn{width:62px;height:62px;border-radius:50%;border:none;color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;margin:0 auto .7rem;cursor:pointer;transition:all .2s}
+#transcript-box{background:#f7f5f0;border:1.5px solid #e2e0db;border-radius:12px;padding:.75rem 1rem;margin-bottom:.85rem;display:none}
 #transcript-box.show{display:block}
 .box-label{font-size:.63rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:.28rem}
-#score-panel{background:#fff;border:1.5px solid #e2e0db;border-radius:15px;padding:1.1rem 1.3rem;display:none;align-items:center;gap:1.1rem;margin-bottom:1rem}
+#score-panel{background:#fff;border:1.5px solid #e2e0db;border-radius:15px;padding:1rem 1.2rem;display:none;align-items:center;gap:1rem;margin-bottom:.9rem}
 #score-panel.show{display:flex}
 .word-ok{color:#16a34a;font-weight:700}.word-miss{color:#dc2626;text-decoration:line-through}
-#flashcard{background:#fff;border:1.5px solid #e2e0db;border-radius:20px;padding:2.6rem 1.8rem;text-align:center;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .22s;margin-bottom:1rem;position:relative}
-.fc-badge{position:absolute;top:.9rem;left:1.2rem;font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.16rem .55rem;border-radius:100px}
-#fc-hint{position:absolute;bottom:.75rem;right:1.1rem;font-size:.65rem;color:#ccc}
-#fc-nav{display:flex;gap:.55rem;justify-content:center;margin-bottom:.7rem}
-#fc-progress{text-align:center;font-size:.76rem;color:#bbb}
-#prog-bar{background:#e2e0db;border-radius:100px;height:7px;margin-bottom:.42rem;overflow:hidden}
-#prog-fill{height:100%;border-radius:100px;transition:width .5s}
-#prog-label{font-size:.74rem;color:#bbb;margin-bottom:1.3rem}
-#add-form{background:#fff;border:1.5px solid #e2e0db;border-radius:13px;padding:1.1rem 1.3rem;margin-bottom:1.1rem}
-#add-form h3{font-weight:700;font-size:.86rem;margin-bottom:.75rem}
-#add-row{display:flex;gap:.48rem;flex-wrap:wrap}
-.finput{flex:1;min-width:90px;background:#f7f5f0;border:1.5px solid #e2e0db;border-radius:9px;padding:.52rem .75rem;font-size:.82rem;color:#1c1a15;outline:none}
+
+/* FLASHCARD */
+#flashcard{background:#fff;border:1.5px solid #e2e0db;border-radius:20px;padding:2.4rem 1.6rem;text-align:center;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .22s;margin-bottom:.9rem;position:relative}
+.fc-badge{position:absolute;top:.85rem;left:1.1rem;font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.16rem .55rem;border-radius:100px;background:#fef2f0;color:#c0392b}
+#fc-hint{position:absolute;bottom:.7rem;right:1rem;font-size:.65rem;color:#ccc}
+#fc-nav{display:flex;gap:.5rem;justify-content:center;margin-bottom:.6rem}
+#fc-progress{text-align:center;font-size:.76rem;color:#bbb;margin-bottom:.5rem}
+
+/* MANAGE */
+#prog-bar{background:#e2e0db;border-radius:100px;height:7px;margin-bottom:.38rem;overflow:hidden}
+#prog-fill{height:100%;border-radius:100px;transition:width .5s;background:linear-gradient(90deg,#c0392b,#e74c3c)}
+#prog-label{font-size:.74rem;color:#bbb;margin-bottom:1.1rem}
+#add-form{background:#fff;border:1.5px solid #e2e0db;border-radius:13px;padding:1rem 1.2rem;margin-bottom:1rem}
+#add-form h3{font-weight:700;font-size:.85rem;margin-bottom:.7rem}
+#add-row{display:flex;gap:.45rem;flex-wrap:wrap}
+.finput{flex:1;min-width:90px;background:#f7f5f0;border:1.5px solid #e2e0db;border-radius:9px;padding:.5rem .7rem;font-size:.82rem;color:#1c1a15;outline:none}
 #pl-grid{display:flex;flex-direction:column;gap:.4rem}
-.pl-item{background:#fff;border:1.5px solid #e2e0db;border-radius:11px;padding:.78rem .95rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;transition:all .15s}
+.pl-item{background:#fff;border:1.5px solid #e2e0db;border-radius:11px;padding:.75rem .9rem;display:flex;align-items:center;gap:.65rem;cursor:pointer;transition:all .15s}
 .pl-n{font-size:.68rem;color:#ccc;font-weight:700;width:18px;flex-shrink:0}
 .pl-texts{flex:1;min-width:0}
-.pl-en{font-size:.83rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl-ja{font-size:.73rem;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-tr{font-size:.83rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-ja{font-size:.72rem;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pl-check{width:19px;height:19px;border-radius:50%;background:#e2e0db;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#fff;font-weight:800;flex-shrink:0}
 .pl-check.done{background:#16a34a}
-.pl-del{background:none;border:none;color:#ccc;font-size:.88rem;cursor:pointer;padding:.12rem .32rem;border-radius:5px;flex-shrink:0}
-#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);color:#fff;border-radius:11px;padding:.75rem 1.2rem;font-size:.84rem;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:999;display:none;white-space:nowrap;animation:toastIn .26s ease both}
+.pl-del{background:none;border:none;color:#ccc;font-size:.88rem;cursor:pointer;padding:.12rem .3rem;border-radius:5px;flex-shrink:0}
+
+/* TEXT INPUT */
+#text-fallback{margin-bottom:.9rem}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%);color:#fff;border-radius:11px;padding:.7rem 1.1rem;font-size:.84rem;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:999;display:none;white-space:nowrap;animation:toastIn .26s ease both}
 #toast.show{display:block}
 
-/* Turkish special characters reminder */
-.tr-chars{background:#fff8f0;border:1.5px solid #fed7aa;border-radius:11px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.76rem;color:#92400e;line-height:1.6}
+/* TR CHARS */
+.tr-chars{background:#fff8f0;border:1.5px solid #fed7aa;border-radius:11px;padding:.65rem .95rem;margin-bottom:.9rem;font-size:.76rem;color:#92400e;line-height:1.7}
 .tr-chars strong{color:#c2410c;font-size:.7rem;letter-spacing:.05em}
+
+/* SCENE HEADER in manage */
+.scene-section-title{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#c0392b;padding:.5rem 0 .4rem;border-bottom:1.5px solid #f0ede8;margin-bottom:.5rem;margin-top:.8rem}
+.scene-section-title:first-child{margin-top:0}
 </style>
 </head>
 <body>
 <div id="header">
-  <div id="logo"></div>
-  <div class="lang-toggle">
-    <button class="lang-btn" id="btn-tr" onclick="setLang('tr')">🇹🇷 TR</button>
-    <button class="lang-btn" id="btn-ja" onclick="setLang('ja')">🇯🇵 JA</button>
-  </div>
-  <div style="display:flex;gap:.35rem">
-    <span class="stat" id="h-done"></span>
-    <span class="stat" id="h-streak"></span>
+  <div id="logo"><span style="color:#c0392b">Speak</span><span style="color:#ddd;font-weight:300">/</span><span style="color:#c0392b">話す</span>Loop 🇹🇷</div>
+  <div style="display:flex;gap:.3rem;margin-left:auto">
+    <span class="stat" id="h-done">✅ 0/0</span>
+    <span class="stat" id="h-streak">🔥 0</span>
   </div>
 </div>
+
 <div id="main">
   <div id="tabs">
     <button class="tab active" id="tab-practice" onclick="switchTab('practice',this)">🎙️ 練習</button>
     <button class="tab" id="tab-flash" onclick="switchTab('flash',this)">🃏 暗記</button>
     <button class="tab" id="tab-manage" onclick="switchTab('manage',this)">📋 一覧</button>
   </div>
+
+  <!-- PRACTICE VIEW -->
   <div class="view active" id="view-practice">
-    <div class="card" id="phrase-card" style="border-left-width:4px;border-left-style:solid">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem">
-        <span class="cat-tag" id="cat-tag"></span>
+    <div id="scene-bar"></div>
+
+    <div class="card" id="phrase-card" style="border-left-width:4px;border-left-style:solid;border-left-color:#c0392b">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
+        <span class="cat-tag" id="cat-tag" style="background:#fef2f0;color:#c0392b"></span>
         <span id="phrase-num" style="margin-left:auto;font-size:.7rem;color:#bbb"></span>
       </div>
-      <div id="phrase-target" style="font-size:1.45rem;font-weight:800;line-height:1.38;letter-spacing:-.01em;margin-bottom:.5rem"></div>
-      <div id="phrase-sub" style="font-size:.86rem;color:#999;margin-bottom:1.1rem;line-height:1.6"></div>
-      <div id="phrase-romaji" style="font-size:.76rem;color:#bbb;margin-bottom:1rem;line-height:1.5;display:none"></div>
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <div id="phrase-target" style="font-size:1.38rem;font-weight:800;line-height:1.42;letter-spacing:-.01em;margin-bottom:.45rem"></div>
+      <div id="phrase-romaji" style="font-size:.76rem;color:#bbb;margin-bottom:.55rem;line-height:1.55;display:none"></div>
+      <div id="phrase-sub" style="font-size:.85rem;color:#999;margin-bottom:1rem;line-height:1.6"></div>
+      <div style="display:flex;gap:.45rem;flex-wrap:wrap">
         <button class="btn primary" id="btn-listen" onclick="playTTS()">🔊 聴く</button>
         <button class="btn" onclick="nextPhrase()">→ 次へ</button>
         <button class="btn" onclick="shufflePhrase()">🔀</button>
-        <button class="btn" id="btn-romaji" onclick="toggleRomaji()" style="font-size:.75rem">ローマ字</button>
+        <button class="btn" id="btn-romaji" onclick="toggleRomaji()" style="font-size:.74rem">読み方</button>
       </div>
     </div>
+
     <div id="record-area">
       <div id="wave"></div>
-      <button id="mic-btn" onclick="toggleRec()">🎙️</button>
-      <div id="rec-status" style="font-weight:700;font-size:.86rem;margin-bottom:.2rem;color:#bbb"></div>
-      <div id="rec-hint" style="font-size:.73rem;color:#ccc"></div>
+      <button id="mic-btn" onclick="toggleRec()" style="background:#c0392b;box-shadow:0 5px 16px #c0392b55">🎙️</button>
+      <div id="rec-status" style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;color:#bbb">🎙️ をタップして録音</div>
+      <div id="rec-hint" style="font-size:.72rem;color:#ccc">トルコ語でハッキリ話してください</div>
     </div>
+
     <div id="transcript-box">
       <div class="box-label">認識結果 / Tanınan</div>
-      <div id="transcript-text" style="font-size:.95rem;line-height:1.65"></div>
+      <div id="transcript-text" style="font-size:.93rem;line-height:1.65"></div>
     </div>
-    <div id="text-fallback" style="margin-bottom:1rem">
-      <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:.4rem">またはテキストで入力 / Veya metin girin</div>
-      <div style="display:flex;gap:.5rem">
-        <input id="text-input" class="finput" placeholder="ここに入力してEnter / Buraya yazın" style="flex:1" onkeydown="if(event.key==='Enter')submitText()"/>
-        <button class="btn primary" id="text-submit-btn" onclick="submitText()" style="flex-shrink:0">✓ 確認</button>
+
+    <div id="text-fallback">
+      <div style="font-size:.71rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:.38rem">またはテキストで入力</div>
+      <div style="display:flex;gap:.45rem">
+        <input id="text-input" class="finput" placeholder="ここに入力してEnter" style="flex:1" onkeydown="if(event.key==='Enter')submitText()"/>
+        <button class="btn primary" id="text-submit-btn" onclick="submitText()" style="flex-shrink:0;background:#c0392b">✓ 確認</button>
       </div>
     </div>
+
     <div id="score-panel">
-      <svg width="64" height="64" viewBox="0 0 64 64" style="flex-shrink:0;transform:rotate(-90deg)">
+      <svg width="60" height="60" viewBox="0 0 64 64" style="flex-shrink:0;transform:rotate(-90deg)">
         <circle cx="32" cy="32" r="28" fill="none" stroke="#eee" stroke-width="6"/>
         <circle id="score-arc" cx="32" cy="32" r="28" fill="none" stroke="#16a34a" stroke-width="6"
           stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round"
@@ -128,30 +158,33 @@ button{cursor:pointer;font-family:inherit}input{font-family:inherit}
           fill="#1c1a15" font-size="10" font-weight="800">0%</text>
       </svg>
       <div style="flex:1">
-        <div id="score-title" style="font-weight:800;font-size:.95rem;margin-bottom:.3rem"></div>
-        <div id="score-detail" style="font-size:.75rem;color:#bbb;margin-bottom:.35rem"></div>
-        <div id="score-words" style="font-size:.83rem;line-height:2;display:flex;flex-wrap:wrap;gap:.2rem"></div>
+        <div id="score-title" style="font-weight:800;font-size:.92rem;margin-bottom:.28rem"></div>
+        <div id="score-detail" style="font-size:.74rem;color:#bbb;margin-bottom:.32rem"></div>
+        <div id="score-words" style="font-size:.82rem;line-height:2;display:flex;flex-wrap:wrap;gap:.2rem"></div>
       </div>
     </div>
   </div>
 
+  <!-- FLASHCARD VIEW -->
   <div class="view" id="view-flash">
+    <div id="scene-bar-flash"></div>
     <div id="flashcard" onclick="flipCard()">
-      <span class="fc-badge" id="fc-badge"></span>
-      <div id="fc-word" style="font-size:1.6rem;font-weight:800;line-height:1.38;margin-bottom:.55rem"></div>
-      <div id="fc-sub" style="font-size:.86rem;color:#ccc;transition:color .2s;line-height:1.6"></div>
+      <span class="fc-badge" id="fc-badge">🇹🇷 TR</span>
+      <div id="fc-word" style="font-size:1.5rem;font-weight:800;line-height:1.42;margin-bottom:.5rem"></div>
+      <div id="fc-sub" style="font-size:.85rem;color:#ccc;transition:color .2s;line-height:1.6"></div>
       <div id="fc-hint">tap ↺</div>
     </div>
     <div id="fc-nav">
       <button class="btn" onclick="fcMove(-1)">← 前へ</button>
-      <button class="btn primary" id="fc-listen" onclick="fcPlayTTS()">🔊 聴く</button>
+      <button class="btn primary" id="fc-listen" onclick="fcPlayTTS()" style="background:#c0392b">🔊 聴く</button>
       <button class="btn" onclick="fcMove(1)">次へ →</button>
     </div>
     <div id="fc-progress"></div>
   </div>
 
+  <!-- MANAGE VIEW -->
   <div class="view" id="view-manage">
-    <div id="prog-bar"><div id="prog-fill" style="width:0%"></div></div>
+    <div id="prog-bar"><div id="prog-fill"></div></div>
     <div id="prog-label"></div>
     <div class="tr-chars">
       <strong>🇹🇷 トルコ語特殊文字：</strong><br>
@@ -160,57 +193,184 @@ button{cursor:pointer;font-family:inherit}input{font-family:inherit}
     <div id="add-form">
       <h3>＋ フレーズを追加</h3>
       <div id="add-row">
-        <input class="finput" id="add-tr" placeholder="Türkçe (トルコ語)" style="max-width:220px"/>
+        <input class="finput" id="add-tr" placeholder="Türkçe フレーズ" style="max-width:220px"/>
         <input class="finput" id="add-ja" placeholder="日本語訳" style="max-width:180px"/>
         <input class="finput" id="add-cat" placeholder="カテゴリ" style="max-width:110px"/>
-        <button class="btn primary" id="add-btn" onclick="addPhrase()">追加</button>
+        <button class="btn primary" id="add-btn" onclick="addPhrase()" style="background:#c0392b">追加</button>
       </div>
     </div>
     <div id="pl-grid"></div>
   </div>
 </div>
-<div id="toast"></div>
-<script>
-var lang='tr', curIdx=0, fcIdx=0, fcFlipped=false, done=[], isRec=false, recObj=null, rafId=null, toastTimer=null, romajiVisible=false;
 
+<div id="toast"></div>
+
+<script>
+var curIdx=0, fcIdx=0, fcFlipped=false, done=[], isRec=false, recObj=null, rafId=null, toastTimer=null, romajiVisible=false;
+var activeScene='すべて';
+
+// ========== PHRASE DATA ==========
 var phrases=[
-  {tr:"Merhaba! Nasılsınız?",ja:"こんにちは！お元気ですか？",rom:"Mer-ha-ba! Na-sıl-sı-nız?",cat:"挨拶"},
-  {tr:"İyiyim, teşekkür ederim.",ja:"元気です、ありがとうございます。",rom:"İ-yi-yim, te-şek-kür e-de-rim.",cat:"挨拶"},
-  {tr:"Benim adım...",ja:"私の名前は…",rom:"Be-nim a-dım...",cat:"自己紹介"},
-  {tr:"Memnun oldum.",ja:"はじめまして。",rom:"Mem-nun ol-dum.",cat:"挨拶"},
-  {tr:"Türkçe bilmiyorum.",ja:"私はトルコ語が分かりません。",rom:"Türk-çe bil-mi-yo-rum.",cat:"言語"},
-  {tr:"Daha yavaş konuşabilir misiniz?",ja:"もう少しゆっくり話してもらえますか？",rom:"Da-ha ya-vaş ko-nu-şa-bi-lir mi-si-niz?",cat:"言語"},
-  {tr:"Anlamadım, tekrar eder misiniz?",ja:"分かりませんでした、もう一度言ってもらえますか？",rom:"An-la-ma-dım, tek-rar e-der mi-si-niz?",cat:"言語"},
-  {tr:"Teşekkür ederim.",ja:"ありがとうございます。",rom:"Te-şek-kür e-de-rim.",cat:"礼儀"},
-  {tr:"Rica ederim.",ja:"どういたしまして。",rom:"Ri-ca e-de-rim.",cat:"礼儀"},
-  {tr:"Lütfen.",ja:"お願いします。",rom:"Lüt-fen.",cat:"礼儀"},
-  {tr:"Özür dilerim.",ja:"すみません。",rom:"Ö-zür di-le-rim.",cat:"礼儀"},
-  {tr:"Evet / Hayır",ja:"はい / いいえ",rom:"E-vet / Ha-yır",cat:"基本"},
-  {tr:"Bu ne kadar?",ja:"これはいくらですか？",rom:"Bu ne ka-dar?",cat:"買い物"},
-  {tr:"Çok güzel!",ja:"とても美しい！素晴らしい！",rom:"Çok gü-zel!",cat:"感想"},
-  {tr:"Aferin!",ja:"よくできました！すごい！",rom:"A-fe-rin!",cat:"感想"},
-  {tr:"Nerede...?",ja:"…はどこですか？",rom:"Ne-re-de...?",cat:"場所"},
-  {tr:"Bir çay lütfen.",ja:"お茶を一つお願いします。",rom:"Bir çay lüt-fen.",cat:"飲食"},
-  {tr:"Hesap lütfen.",ja:"お会計をお願いします。",rom:"He-sap lüt-fen.",cat:"飲食"},
-  {tr:"İyi geceler!",ja:"おやすみなさい！",rom:"İ-yi ge-ce-ler!",cat:"挨拶"},
-  {tr:"Görüşürüz!",ja:"またね！",rom:"Gö-rü-şü-rüz!",cat:"挨拶"},
-  {tr:"Seni seviyorum.",ja:"あなたを愛しています。",rom:"Se-ni se-vi-yo-rum.",cat:"気持ち"},
-  {tr:"Harika bir gün!",ja:"素晴らしい一日！",rom:"Ha-ri-ka bir gün!",cat:"感想"},
-  {tr:"Türkiye çok güzel bir ülke.",ja:"トルコはとても美しい国です。",rom:"Tür-ki-ye çok gü-zel bir ül-ke.",cat:"会話"},
-  {tr:"İstanbul'a gitmek istiyorum.",ja:"イスタンブールに行きたいです。",rom:"İs-tan-bul-a git-mek is-ti-yo-rum.",cat:"旅行"},
-  {tr:"Yardım eder misiniz?",ja:"手伝ってもらえますか？",rom:"Yar-dım e-der mi-si-niz?",cat:"依頼"},
+  // ── 挨拶 ──
+  {tr:"Merhaba!",ja:"こんにちは！",rom:"Mer-ha-ba",cat:"挨拶"},
+  {tr:"Günaydın!",ja:"おはようございます！",rom:"Gü-nay-dın",cat:"挨拶"},
+  {tr:"İyi günler!",ja:"こんにちは！（丁寧）",rom:"İ-yi gün-ler",cat:"挨拶"},
+  {tr:"İyi akşamlar!",ja:"こんばんは！",rom:"İ-yi ak-şam-lar",cat:"挨拶"},
+  {tr:"İyi geceler!",ja:"おやすみなさい！",rom:"İ-yi ge-ce-ler",cat:"挨拶"},
+  {tr:"Nasılsınız?",ja:"お元気ですか？（丁寧）",rom:"Na-sıl-sı-nız",cat:"挨拶"},
+  {tr:"Nasılsın?",ja:"元気？（友人へ）",rom:"Na-sıl-sın",cat:"挨拶"},
+  {tr:"İyiyim, teşekkür ederim.",ja:"元気です、ありがとう。",rom:"İ-yi-yim, te-şek-kür e-de-rim",cat:"挨拶"},
+  {tr:"Memnun oldum.",ja:"はじめまして。",rom:"Mem-nun ol-dum",cat:"挨拶"},
+  {tr:"Görüşürüz!",ja:"またね！",rom:"Gö-rü-şü-rüz",cat:"挨拶"},
+  {tr:"Hoşça kal!",ja:"さようなら！（去る人に）",rom:"Hoş-ça kal",cat:"挨拶"},
+  {tr:"Güle güle!",ja:"さようなら！（見送る人に）",rom:"Gü-le gü-le",cat:"挨拶"},
+
+  // ── 自己紹介 ──
+  {tr:"Benim adım Bernadett Wakai.",ja:"私の名前はWAKAI Bernadettです。",rom:"Be-nim a-dım Ber-na-dett Wa-kai",cat:"自己紹介"},
+  {tr:"Ben Japonya'dan geliyorum.",ja:"日本から来ました。",rom:"Ben Ja-pon-ya-dan ge-li-yo-rum",cat:"自己紹介"},
+  {tr:"Japonum.",ja:"日本人です。",rom:"Ja-po-num",cat:"自己紹介"},
+  {tr:"Kaç yaşındasınız?",ja:"おいくつですか？",rom:"Kaç ya-şın-da-sı-nız",cat:"自己紹介"},
+  {tr:"Otuz yaşındayım.",ja:"30歳です。",rom:"O-tuz ya-şın-da-yım",cat:"自己紹介"},
+  {tr:"Ne iş yapıyorsunuz?",ja:"お仕事は何ですか？",rom:"Ne iş ya-pı-yor-su-nuz",cat:"自己紹介"},
+  {tr:"Öğrenciyim.",ja:"学生です。",rom:"Öğ-ren-ci-yim",cat:"自己紹介"},
+  {tr:"Nerede oturuyorsunuz?",ja:"どこにお住まいですか？",rom:"Ne-re-de o-tu-ru-yor-su-nuz",cat:"自己紹介"},
+
+  // ── 言語・会話 ──
+  {tr:"Türkçe bilmiyorum.",ja:"トルコ語が分かりません。",rom:"Türk-çe bil-mi-yo-rum",cat:"言語"},
+  {tr:"Biraz Türkçe biliyorum.",ja:"トルコ語が少し分かります。",rom:"Bi-raz Türk-çe bi-li-yo-rum",cat:"言語"},
+  {tr:"Daha yavaş konuşabilir misiniz?",ja:"もう少しゆっくり話してください。",rom:"Da-ha ya-vaş ko-nu-şa-bi-lir mi-si-niz",cat:"言語"},
+  {tr:"Tekrar eder misiniz?",ja:"もう一度言ってもらえますか？",rom:"Tek-rar e-der mi-si-niz",cat:"言語"},
+  {tr:"Anlamadım.",ja:"分かりませんでした。",rom:"An-la-ma-dım",cat:"言語"},
+  {tr:"İngilizce biliyor musunuz?",ja:"英語は話せますか？",rom:"İn-gi-liz-ce bi-li-yor mu-su-nuz",cat:"言語"},
+  {tr:"Japonca konuşuyorum.",ja:"日本語を話します。",rom:"Ja-pon-ca ko-nu-şu-yo-rum",cat:"言語"},
+  {tr:"Bu Türkçe'de ne demek?",ja:"これはトルコ語で何と言いますか？",rom:"Bu Türk-çe-de ne de-mek",cat:"言語"},
+
+  // ── 礼儀・丁寧語 ──
+  {tr:"Teşekkür ederim.",ja:"ありがとうございます。",rom:"Te-şek-kür e-de-rim",cat:"礼儀"},
+  {tr:"Çok teşekkür ederim.",ja:"本当にありがとうございます。",rom:"Çok te-şek-kür e-de-rim",cat:"礼儀"},
+  {tr:"Rica ederim.",ja:"どういたしまして。",rom:"Ri-ca e-de-rim",cat:"礼儀"},
+  {tr:"Lütfen.",ja:"お願いします。",rom:"Lüt-fen",cat:"礼儀"},
+  {tr:"Özür dilerim.",ja:"すみません／ごめんなさい。",rom:"Ö-zür di-le-rim",cat:"礼儀"},
+  {tr:"Affedersiniz.",ja:"失礼します。（呼びかけ）",rom:"Af-fe-der-si-niz",cat:"礼儀"},
+  {tr:"Buyurun.",ja:"どうぞ。／いらっしゃいませ。",rom:"Bu-yu-run",cat:"礼儀"},
+  {tr:"Kolay gelsin!",ja:"お疲れ様です！",rom:"Ko-lay gel-sin",cat:"礼儀"},
+
+  // ── 飲食店 ──
+  {tr:"Bir masa için yer var mı?",ja:"テーブルは空いていますか？",rom:"Bir ma-sa i-çin yer var mı",cat:"飲食店"},
+  {tr:"Menüyü görebilir miyim?",ja:"メニューを見せてもらえますか？",rom:"Me-nü-yü gö-re-bi-lir mi-yim",cat:"飲食店"},
+  {tr:"Ne tavsiye edersiniz?",ja:"何がお勧めですか？",rom:"Ne tav-si-ye e-der-si-niz",cat:"飲食店"},
+  {tr:"Bir çay lütfen.",ja:"チャイを一つお願いします。",rom:"Bir çay lüt-fen",cat:"飲食店"},
+  {tr:"Bir su lütfen.",ja:"お水を一つお願いします。",rom:"Bir su lüt-fen",cat:"飲食店"},
+  {tr:"Bu çok lezzetli!",ja:"これはとても美味しい！",rom:"Bu çok lez-zet-li",cat:"飲食店"},
+  {tr:"Hesap lütfen.",ja:"お会計をお願いします。",rom:"He-sap lüt-fen",cat:"飲食店"},
+  {tr:"Kredi kartı kabul ediyor musunuz?",ja:"クレジットカードは使えますか？",rom:"Kre-di kar-tı ka-bul e-di-yor mu-su-nuz",cat:"飲食店"},
+  {tr:"Paket yapabilir misiniz?",ja:"テイクアウトできますか？",rom:"Pa-ket ya-pa-bi-lir mi-si-niz",cat:"飲食店"},
+  {tr:"Vejetaryen yemek var mı?",ja:"ベジタリアン料理はありますか？",rom:"Ve-je-tar-yen ye-mek var mı",cat:"飲食店"},
+
+  // ── 買い物 ──
+  {tr:"Bu ne kadar?",ja:"これはいくらですか？",rom:"Bu ne ka-dar",cat:"買い物"},
+  {tr:"Çok pahalı.",ja:"高すぎます。",rom:"Çok pa-ha-lı",cat:"買い物"},
+  {tr:"Daha ucuz var mı?",ja:"もっと安いものはありますか？",rom:"Da-ha u-cuz var mı",cat:"買い物"},
+  {tr:"Bunu alıyorum.",ja:"これを買います。",rom:"Bu-nu a-lı-yo-rum",cat:"買い物"},
+  {tr:"Bakmak istiyorum sadece.",ja:"見ているだけです。",rom:"Bak-mak is-ti-yo-rum sa-de-ce",cat:"買い物"},
+  {tr:"Başka rengi var mı?",ja:"別の色はありますか？",rom:"Baş-ka ren-gi var mı",cat:"買い物"},
+  {tr:"Büyük / küçük beden var mı?",ja:"大きい／小さいサイズはありますか？",rom:"Bü-yük / kü-çük be-den var mı",cat:"買い物"},
+  {tr:"Bozuk para var mı?",ja:"お釣りはありますか？",rom:"Bo-zuk pa-ra var mı",cat:"買い物"},
+  {tr:"Çanta var mı?",ja:"袋はありますか？",rom:"Çan-ta var mı",cat:"買い物"},
+  {tr:"Kasa nerede?",ja:"レジはどこですか？",rom:"Ka-sa ne-re-de",cat:"買い物"},
+
+  // ── 交通・移動 ──
+  {tr:"Tren istasyonu nerede?",ja:"電車の駅はどこですか？",rom:"Tren is-tas-yo-nu ne-re-de",cat:"交通"},
+  {tr:"Buradan uzak mı?",ja:"ここから遠いですか？",rom:"Bu-ra-dan u-zak mı",cat:"交通"},
+  {tr:"Yürüyerek gidebilir miyim?",ja:"歩いて行けますか？",rom:"Yü-rü-ye-rek gi-de-bi-lir mi-yim",cat:"交通"},
+  {tr:"Taksi çağırabilir misiniz?",ja:"タクシーを呼んでもらえますか？",rom:"Tak-si ça-ğı-ra-bi-lir mi-si-niz",cat:"交通"},
+  {tr:"Havalimanına gitmek istiyorum.",ja:"空港に行きたいです。",rom:"Ha-va-li-ma-nı-na git-mek is-ti-yo-rum",cat:"交通"},
+  {tr:"Sağa / sola dönün.",ja:"右／左に曲がってください。",rom:"Sa-ğa / so-la dö-nün",cat:"交通"},
+  {tr:"Düz gidin.",ja:"まっすぐ行ってください。",rom:"Düz gi-din",cat:"交通"},
+  {tr:"Metro nerede?",ja:"地下鉄はどこですか？",rom:"Met-ro ne-re-de",cat:"交通"},
+  {tr:"Bu otobüs şehir merkezine gidiyor mu?",ja:"このバスは市街中心部に行きますか？",rom:"Bu o-to-büs şe-hir mer-ke-zi-ne gi-di-yor mu",cat:"交通"},
+  {tr:"Bilet nerede alabilirim?",ja:"チケットはどこで買えますか？",rom:"Bi-let ne-re-de a-la-bi-li-rim",cat:"交通"},
+
+  // ── ホテル ──
+  {tr:"Rezervasyonum var.",ja:"予約があります。",rom:"Re-zer-vas-yo-num var",cat:"ホテル"},
+  {tr:"Check-in yapmak istiyorum.",ja:"チェックインしたいです。",rom:"Check-in yap-mak is-ti-yo-rum",cat:"ホテル"},
+  {tr:"Check-out saat kaçta?",ja:"チェックアウトは何時ですか？",rom:"Check-out sa-at kaç-ta",cat:"ホテル"},
+  {tr:"Oda temizleme lütfen.",ja:"部屋の掃除をお願いします。",rom:"O-da te-miz-le-me lüt-fen",cat:"ホテル"},
+  {tr:"Wifi şifresi nedir?",ja:"Wifiのパスワードは何ですか？",rom:"Wifi şif-re-si ne-dir",cat:"ホテル"},
+  {tr:"Klima çalışmıyor.",ja:"エアコンが動きません。",rom:"Kli-ma ça-lış-mı-yor",cat:"ホテル"},
+  {tr:"Ekstra havlu istiyorum.",ja:"タオルを追加でほしいです。",rom:"Eks-tra hav-lu is-ti-yo-rum",cat:"ホテル"},
+  {tr:"Bagajımı bırakabilir miyim?",ja:"荷物を預けられますか？",rom:"Ba-ga-jı-mı bı-ra-ka-bi-lir mi-yim",cat:"ホテル"},
+
+  // ── 観光・旅行 ──
+  {tr:"Burası çok güzel!",ja:"ここはとても美しい！",rom:"Bu-ra-sı çok gü-zel",cat:"観光"},
+  {tr:"Fotoğraf çekebilir miyim?",ja:"写真を撮ってもいいですか？",rom:"Fo-toğ-raf çe-ke-bi-lir mi-yim",cat:"観光"},
+  {tr:"Buranın ünlü yerleri neler?",ja:"この辺の有名な場所はどこですか？",rom:"Bu-ra-nın ün-lü yer-le-ri ne-ler",cat:"観光"},
+  {tr:"Müze kaçta açılıyor?",ja:"美術館は何時に開きますか？",rom:"Mü-ze kaç-ta a-çı-lı-yor",cat:"観光"},
+  {tr:"Giriş ücreti ne kadar?",ja:"入場料はいくらですか？",rom:"Gi-riş üc-re-ti ne ka-dar",cat:"観光"},
+  {tr:"Türkiye çok güzel bir ülke.",ja:"トルコはとても美しい国です。",rom:"Tür-ki-ye çok gü-zel bir ül-ke",cat:"観光"},
+  {tr:"İstanbul'a gitmek istiyorum.",ja:"イスタンブールに行きたいです。",rom:"İs-tan-bul-a git-mek is-ti-yo-rum",cat:"観光"},
+  {tr:"Harita var mı?",ja:"地図はありますか？",rom:"Ha-ri-ta var mı",cat:"観光"},
+
+  // ── 緊急・医療 ──
+  {tr:"Yardım edin!",ja:"助けてください！",rom:"Yar-dım e-din",cat:"緊急"},
+  {tr:"Doktor çağırın lütfen!",ja:"お医者さんを呼んでください！",rom:"Dok-tor ça-ğı-rın lüt-fen",cat:"緊急"},
+  {tr:"Hastane nerede?",ja:"病院はどこですか？",rom:"Has-ta-ne ne-re-de",cat:"緊急"},
+  {tr:"Çok kötü hissediyorum.",ja:"とても気分が悪いです。",rom:"Çok kö-tü his-se-di-yo-rum",cat:"緊急"},
+  {tr:"Baş ağrısı var.",ja:"頭が痛いです。",rom:"Baş ağ-rı-sı var",cat:"緊急"},
+  {tr:"Karnım ağrıyor.",ja:"お腹が痛いです。",rom:"Kar-nım ağ-rı-yor",cat:"緊急"},
+  {tr:"Alerjim var.",ja:"アレルギーがあります。",rom:"A-ler-jim var",cat:"緊急"},
+  {tr:"Pasaportumu kaybettim.",ja:"パスポートをなくしました。",rom:"Pa-sa-por-tu-mu kay-bet-tim",cat:"緊急"},
+  {tr:"Polis nerede?",ja:"警察はどこですか？",rom:"Po-lis ne-re-de",cat:"緊急"},
+
+  // ── 日常会話 ──
+  {tr:"Hava çok güzel bugün.",ja:"今日はとてもいい天気ですね。",rom:"Ha-va çok gü-zel bu-gün",cat:"日常会話"},
+  {tr:"Bugün ne yapıyorsun?",ja:"今日は何をしているの？",rom:"Bu-gün ne ya-pı-yor-sun",cat:"日常会話"},
+  {tr:"Çok yorgunum.",ja:"とても疲れました。",rom:"Çok yor-gu-num",cat:"日常会話"},
+  {tr:"Acıktım.",ja:"お腹が空きました。",rom:"A-cık-tım",cat:"日常会話"},
+  {tr:"Susadım.",ja:"喉が渇きました。",rom:"Su-sa-dım",cat:"日常会話"},
+  {tr:"Çok eğlenceli!",ja:"とても楽しい！",rom:"Çok eğ-len-ce-li",cat:"日常会話"},
+  {tr:"Harika!",ja:"素晴らしい！",rom:"Ha-ri-ka",cat:"日常会話"},
+  {tr:"Ne zaman?",ja:"いつですか？",rom:"Ne za-man",cat:"日常会話"},
+  {tr:"Beraber gidelim mi?",ja:"一緒に行きませんか？",rom:"Be-ra-ber gi-de-lim mi",cat:"日常会話"},
+  {tr:"Saat kaç?",ja:"今何時ですか？",rom:"Sa-at kaç",cat:"日常会話"},
+  {tr:"Şimdi saat üç.",ja:"今3時です。",rom:"Şim-di sa-at üç",cat:"日常会話"},
+  {tr:"Bugün hangi gün?",ja:"今日は何曜日ですか？",rom:"Bu-gün han-gi gün",cat:"日常会話"},
 ];
 
+// ========== SCENE LIST ==========
+var scenes=['すべて','挨拶','自己紹介','言語','礼儀','飲食店','買い物','交通','ホテル','観光','緊急','日常会話'];
+
+function getFilteredPhrases(){
+  if(activeScene==='すべて') return phrases;
+  return phrases.filter(function(p){return p.cat===activeScene;});
+}
+
 function isDone(i){return done.indexOf(i)>=0;}
-function getTarget(p){return lang==='tr'?p.tr:p.ja;}
-function getSub(p){return lang==='tr'?p.ja:p.tr;}
-function acc(){return '#c0392b';}
-function accL(){return '#fef2f0';}
-function accM(){return '#e74c3c';}
 function g(id){return document.getElementById(id);}
 
+// ========== SCENE BAR ==========
+function buildSceneBars(){
+  ['scene-bar','scene-bar-flash'].forEach(function(barId){
+    var bar=g(barId);if(!bar)return;
+    bar.innerHTML='';
+    scenes.forEach(function(s){
+      var btn=document.createElement('button');
+      btn.className='scene-btn'+(s===activeScene?' active':'');
+      btn.textContent=s;
+      btn.onclick=(function(sc,bid){return function(){
+        activeScene=sc;
+        buildSceneBars();
+        if(bid==='scene-bar'){renderPhrase(0);}
+        else{renderFlash(0);}
+      };})(s,barId);
+      bar.appendChild(btn);
+    });
+  });
+}
+
+// ========== INIT ==========
 function init(){
-  updateLangUI();
+  buildSceneBars();
   renderPhrase(0);
   renderFlash(0);
   updateHeader();
@@ -220,116 +380,74 @@ function init(){
   }
 }
 
-function updateLangUI(){
-  var a=acc(),al=accL();
-  g('btn-tr').style.background=lang==='tr'?a:'transparent';
-  g('btn-tr').style.color=lang==='tr'?'#fff':'#7a7060';
-  g('btn-ja').style.background=lang==='ja'?'#1d4ed8':'transparent';
-  g('btn-ja').style.color=lang==='ja'?'#fff':'#7a7060';
-  g('logo').innerHTML='<span style="color:'+a+'">Speak</span><span style="color:#ddd;font-weight:300">/</span><span style="color:#1d4ed8">話す</span>Loop 🇹🇷';
-  g('btn-listen').style.background=a;
-  g('fc-listen').style.background=a;
-  g('add-btn').style.background=a;
-  if(g('text-submit-btn'))g('text-submit-btn').style.background=a;
-  g('prog-fill').style.background='linear-gradient(90deg,'+a+','+accM()+')';
-  g('rec-status').textContent=lang==='tr'?'🎙️ タップして録音':'🎙️ をタップして録音';
-  g('rec-hint').textContent=lang==='tr'?'トルコ語でハッキリ話してください':'日本語でハッキリ話してください';
-  g('mic-btn').style.background=a;
-  g('mic-btn').style.boxShadow='0 5px 16px '+a+'55';
-}
-
-function setLang(l){
-  lang=l;
-  updateLangUI();
-  resetRec();
-  romajiVisible=false;
-  g('phrase-romaji').style.display='none';
-  renderPhrase(curIdx);
-  renderFlash(fcIdx);
-  renderManage();
-}
-
 function updateHeader(){
-  var s=0;
-  for(var i=0;i<phrases.length;i++){if(isDone(i))s++;else break;}
-  g('h-done').textContent='✅ '+done.length+'/'+phrases.length;
+  var total=phrases.length;
+  var s=0;for(var i=0;i<phrases.length;i++){if(isDone(i))s++;else break;}
+  g('h-done').textContent='✅ '+done.length+'/'+total;
   g('h-streak').textContent='🔥 '+s;
 }
 
-function renderPhrase(idx){
-  curIdx=((idx%phrases.length)+phrases.length)%phrases.length;
-  var p=phrases[curIdx],a=acc(),al=accL();
-  g('phrase-card').style.borderLeftColor=a;
-  var ct=g('cat-tag');
-  ct.textContent=p.cat;ct.style.background=al;ct.style.color=a;
-  g('phrase-num').textContent='#'+(curIdx+1)+'/'+phrases.length;
-  g('phrase-target').textContent=getTarget(p);
-  g('phrase-sub').textContent=getSub(p);
+// ========== PHRASE ==========
+function renderPhrase(localIdx){
+  var fp=getFilteredPhrases();
+  if(!fp.length) return;
+  var li=((localIdx%fp.length)+fp.length)%fp.length;
+  curIdx=li;
+  var p=fp[li];
+  g('cat-tag').textContent=p.cat;
+  g('phrase-num').textContent='#'+(li+1)+'/'+fp.length;
+  g('phrase-target').textContent=p.tr;
+  g('phrase-sub').textContent=p.ja;
   g('phrase-romaji').textContent='📖 '+p.rom;
-  if(romajiVisible&&lang==='tr'){g('phrase-romaji').style.display='block';}
+  if(romajiVisible){g('phrase-romaji').style.display='block';}
   else{g('phrase-romaji').style.display='none';}
   resetRec();
 }
 
 function toggleRomaji(){
   romajiVisible=!romajiVisible;
-  if(lang==='tr'){
-    g('phrase-romaji').style.display=romajiVisible?'block':'none';
-  }
-  g('btn-romaji').style.background=romajiVisible?acc():'transparent';
+  g('phrase-romaji').style.display=romajiVisible?'block':'none';
+  g('btn-romaji').style.background=romajiVisible?'#c0392b':'transparent';
   g('btn-romaji').style.color=romajiVisible?'#fff':'#1c1a15';
 }
 
 function nextPhrase(){renderPhrase(curIdx+1);}
-function shufflePhrase(){var r;do{r=Math.floor(Math.random()*phrases.length);}while(r===curIdx&&phrases.length>1);renderPhrase(r);}
-
-function resetRec(){
-  if(isRec&&recObj)recObj.stop();
-  g('transcript-box').className='';
-  g('score-panel').className='';
-  g('record-area').style.borderStyle='dashed';
-  g('record-area').style.borderColor='#ccc';
-  g('record-area').style.background='#fff';
-  var a=acc();
-  g('mic-btn').className='';
-  g('mic-btn').style.background=a;
-  g('mic-btn').style.boxShadow='0 5px 16px '+a+'55';
-  g('mic-btn').textContent='🎙️';
-  g('rec-status').style.color='#bbb';
-  g('rec-status').textContent='🎙️ をタップして録音';
-  g('wave').style.opacity='.1';
-  cancelAnimationFrame(rafId);
-  isRec=false;
+function shufflePhrase(){
+  var fp=getFilteredPhrases();
+  var r;do{r=Math.floor(Math.random()*fp.length);}while(r===curIdx&&fp.length>1);
+  renderPhrase(r);
 }
 
-function playTTS(){speakText(getTarget(phrases[curIdx]));}
-function fcPlayTTS(){speakText(getTarget(phrases[fcIdx]));}
+// ========== TTS ==========
 function speakText(text){
   if(!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
   var u=new SpeechSynthesisUtterance(text);
-  u.lang=lang==='tr'?'tr-TR':'ja-JP';
-  u.rate=.82;
-  var vs=window.speechSynthesis.getVoices(),prefix=lang==='tr'?'tr':'ja',v=null;
-  for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf(prefix)===0&&vs[i].localService){v=vs[i];break;}}
-  if(!v){for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf(prefix)===0){v=vs[i];break;}}}
+  u.lang='tr-TR';u.rate=.8;
+  var vs=window.speechSynthesis.getVoices(),v=null;
+  for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf('tr')===0&&vs[i].localService){v=vs[i];break;}}
+  if(!v){for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf('tr')===0){v=vs[i];break;}}}
   if(v)u.voice=v;
   window.speechSynthesis.speak(u);
 }
+function playTTS(){speakText(getFilteredPhrases()[curIdx].tr);}
+function fcPlayTTS(){speakText(getFilteredPhrases()[fcIdx].tr);}
+
+// ========== RECORD ==========
+function resetRec(){
+  if(isRec&&recObj)recObj.stop();
+  g('transcript-box').className='';g('score-panel').className='';
+  g('record-area').style.borderStyle='dashed';g('record-area').style.borderColor='#ccc';g('record-area').style.background='#fff';
+  g('mic-btn').className='';g('mic-btn').style.background='#c0392b';g('mic-btn').style.boxShadow='0 5px 16px #c0392b55';g('mic-btn').textContent='🎙️';
+  g('rec-status').style.color='#bbb';g('rec-status').textContent='🎙️ をタップして録音';
+  g('wave').style.opacity='.1';cancelAnimationFrame(rafId);isRec=false;
+}
 
 function stopRecUI(){
-  isRec=false;
-  cancelAnimationFrame(rafId);
-  var a=acc();
-  g('mic-btn').className='';
-  g('mic-btn').style.background=a;
-  g('mic-btn').style.boxShadow='0 5px 16px '+a+'55';
-  g('mic-btn').textContent='🎙️';
-  g('rec-status').style.color='#bbb';
-  g('rec-status').textContent='もう一度タップ';
-  g('record-area').style.borderStyle='dashed';
-  g('record-area').style.borderColor='#ccc';
-  g('record-area').style.background='#fff';
+  isRec=false;cancelAnimationFrame(rafId);
+  g('mic-btn').className='';g('mic-btn').style.background='#c0392b';g('mic-btn').style.boxShadow='0 5px 16px #c0392b55';g('mic-btn').textContent='🎙️';
+  g('rec-status').style.color='#bbb';g('rec-status').textContent='もう一度タップ';
+  g('record-area').style.borderStyle='dashed';g('record-area').style.borderColor='#ccc';g('record-area').style.background='#fff';
   g('wave').style.opacity='.1';
 }
 
@@ -337,29 +455,27 @@ function toggleRec(){
   if(isRec){if(recObj)recObj.stop();return;}
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showToast('Chromeをお使いください',true);return;}
-  var capturedIdx=curIdx,capturedLang=lang;
-  var a=acc(),al=accL();
+  var capturedIdx=curIdx;
   var rec=new SR();recObj=rec;
-  rec.lang=lang==='tr'?'tr-TR':'ja-JP';
-  rec.continuous=false;rec.interimResults=true;
+  rec.lang='tr-TR';rec.continuous=false;rec.interimResults=true;
   rec.onstart=function(){
     isRec=true;
     g('transcript-box').className='';g('score-panel').className='';g('transcript-text').textContent='';
     g('mic-btn').className='pulsing';g('mic-btn').style.background='#dc2626';g('mic-btn').style.boxShadow='0 5px 16px #dc262660';g('mic-btn').textContent='⏹';
-    g('rec-status').style.color=a;g('rec-status').textContent='録音中… ⏹で停止';
-    g('record-area').style.borderStyle='solid';g('record-area').style.borderColor=a;g('record-area').style.background=al;
+    g('rec-status').style.color='#c0392b';g('rec-status').textContent='録音中… ⏹で停止';
+    g('record-area').style.borderStyle='solid';g('record-area').style.borderColor='#c0392b';g('record-area').style.background='#fef2f0';
     g('wave').style.opacity='1';
     var waveEl=g('wave');waveEl.innerHTML='';
-    var NUM=28,bars=[];
-    for(var i=0;i<NUM;i++){var b=document.createElement('div');b.className='bar';b.style.background='linear-gradient(to top,'+a+','+accM()+')';b.style.height='3px';waveEl.appendChild(b);bars.push(b);}
+    var NUM=26,bars=[];
+    for(var i=0;i<NUM;i++){var b=document.createElement('div');b.className='bar';b.style.background='linear-gradient(to top,#c0392b,#e74c3c)';b.style.height='3px';waveEl.appendChild(b);bars.push(b);}
     var t=0;
-    function tick(){rafId=requestAnimationFrame(tick);t+=0.15;for(var i=0;i<NUM;i++){var h=Math.max(3,Math.abs(Math.sin(t+i*0.4))*40+Math.random()*8);bars[i].style.height=h+'px';}}
+    function tick(){rafId=requestAnimationFrame(tick);t+=0.15;for(var i=0;i<NUM;i++){var h=Math.max(3,Math.abs(Math.sin(t+i*0.4))*38+Math.random()*7);bars[i].style.height=h+'px';}}
     tick();
   };
   rec.onresult=function(e){
     var t='';for(var i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;
     g('transcript-text').textContent=t;g('transcript-box').className='show';
-    if(e.results[e.results.length-1].isFinal)evaluate(t,capturedIdx,capturedLang);
+    if(e.results[e.results.length-1].isFinal)evaluate(t,capturedIdx);
   };
   rec.onerror=function(e){
     stopRecUI();
@@ -374,13 +490,13 @@ function submitText(){
   var val=g('text-input').value.trim();
   if(!val){showToast('テキストを入力してください',true);return;}
   g('transcript-text').textContent=val;g('transcript-box').className='show';
-  evaluate(val,curIdx,lang);
-  g('text-input').value='';
+  evaluate(val,curIdx);g('text-input').value='';
 }
 
-function evaluate(text,pIdx,pLang){
-  var p=phrases[pIdx];if(!p)return;
-  var target=(pLang==='tr'?p.tr:p.ja).toLowerCase().replace(/[^\p{L}\s]/gu,'');
+function evaluate(text,pIdx){
+  var fp=getFilteredPhrases();var p=fp[pIdx];if(!p)return;
+  var globalIdx=phrases.indexOf(p);
+  var target=p.tr.toLowerCase().replace(/[^\p{L}\s]/gu,'');
   var spoken=text.toLowerCase().replace(/[^\p{L}\s]/gu,'');
   var tw=target.split(/\s+/).filter(Boolean);
   var sw=spoken.split(/\s+/).filter(Boolean);
@@ -396,72 +512,96 @@ function evaluate(text,pIdx,pLang){
   g('score-detail').textContent=matched+'/'+tw.length+' 語一致';
   var sw_el=g('score-words');sw_el.innerHTML='';
   words.forEach(function(wd){var sp=document.createElement('span');sp.textContent=wd.w;sp.className=wd.hit?'word-ok':'word-miss';sw_el.appendChild(sp);});
-  if(pct>=75){if(!isDone(pIdx))done.push(pIdx);updateHeader();renderManage();showToast(pct===100?'🎉 Mükemmel！':'✅ Harika！');}
-  else{showToast(pct>=50?'💪 もう一度！':'🔄 練習を続けよう！');}
+  if(pct>=75){if(globalIdx>=0&&!isDone(globalIdx))done.push(globalIdx);updateHeader();renderManage();showToast(pct===100?'🎉 Mükemmel！':'✅ Harika！');}
+  else showToast(pct>=50?'💪 もう一度！':'🔄 練習しよう！');
 }
 
-function renderFlash(idx){
-  fcIdx=((idx%phrases.length)+phrases.length)%phrases.length;fcFlipped=false;
-  var p=phrases[fcIdx],a=acc(),al=accL();
-  var fc=g('flashcard');fc.style.background='#fff';fc.style.borderColor='#e2e0db';
-  var badge=g('fc-badge');badge.textContent=lang==='tr'?'TR':'JA';badge.style.background=al;badge.style.color=a;
-  var fw=g('fc-word');fw.textContent=getTarget(p);fw.style.fontSize='1.45rem';
-  var fs=g('fc-sub');fs.textContent='タップして翻訳を表示';fs.style.color='#ccc';
-  g('fc-progress').textContent=(fcIdx+1)+' / '+phrases.length;
+// ========== FLASHCARD ==========
+function renderFlash(localIdx){
+  var fp=getFilteredPhrases();if(!fp.length)return;
+  fcIdx=((localIdx%fp.length)+fp.length)%fp.length;fcFlipped=false;
+  var p=fp[fcIdx],fc=g('flashcard');
+  fc.style.background='#fff';fc.style.borderColor='#e2e0db';
+  g('fc-word').textContent=p.tr;g('fc-word').style.fontSize='1.4rem';
+  g('fc-sub').textContent='タップして訳を表示';g('fc-sub').style.color='#ccc';
+  g('fc-progress').textContent=(fcIdx+1)+' / '+fp.length+' （'+p.cat+'）';
 }
 
 function flipCard(){
-  fcFlipped=!fcFlipped;var p=phrases[fcIdx],a=acc(),al=accL(),fc=g('flashcard'),fs=g('fc-sub');
+  fcFlipped=!fcFlipped;var fp=getFilteredPhrases();var p=fp[fcIdx];
+  var fc=g('flashcard'),fs=g('fc-sub');
   if(fcFlipped){
-    fc.style.background=al;fc.style.borderColor=a;
-    fs.textContent=getSub(p)+(lang==='tr'&&p.rom?'\n📖 '+p.rom:'');
-    fs.style.color='#333';
+    fc.style.background='#fef2f0';fc.style.borderColor='#c0392b';
+    fs.textContent=p.ja+(p.rom?'\n📖 '+p.rom:'');fs.style.color='#333';
   } else {
     fc.style.background='#fff';fc.style.borderColor='#e2e0db';
-    fs.textContent='タップして翻訳を表示';fs.style.color='#ccc';
+    fs.textContent='タップして訳を表示';fs.style.color='#ccc';
   }
 }
 function fcMove(d){renderFlash(fcIdx+d);}
 
+// ========== MANAGE ==========
 function renderManage(){
   var pct=phrases.length?Math.round(done.length/phrases.length*100):0;
   g('prog-fill').style.width=pct+'%';
-  g('prog-label').textContent=done.length+' / '+phrases.length+' フレーズ練習済み';
+  g('prog-label').textContent=done.length+' / '+phrases.length+' フレーズ練習済み（全シーン）';
   var grid=g('pl-grid');grid.innerHTML='';
-  var a=acc(),al=accL();
+  var byScene={};
   phrases.forEach(function(p,i){
-    var div=document.createElement('div');div.className='pl-item';
-    if(i===curIdx){div.style.borderColor=a;div.style.background=al;}
-    div.innerHTML='<span class="pl-n">'+(i+1)+'</span><div class="pl-texts"><div class="pl-en">'+escHtml(p.tr)+'</div><div class="pl-ja">'+escHtml(p.ja)+'</div></div><div class="pl-check'+(isDone(i)?' done':'')+'">'+( isDone(i)?'✓':'')+'</div><button class="pl-del" data-i="'+i+'">✕</button>';
-    div.querySelector('.pl-del').addEventListener('click',function(e){e.stopPropagation();delPhrase(parseInt(this.getAttribute('data-i')));});
-    div.addEventListener('click',function(){renderPhrase(i);switchTab('practice',g('tab-practice'));});
-    grid.appendChild(div);
+    if(!byScene[p.cat])byScene[p.cat]=[];
+    byScene[p.cat].push({p:p,i:i});
+  });
+  scenes.slice(1).forEach(function(sc){
+    if(!byScene[sc])return;
+    var title=document.createElement('div');title.className='scene-section-title';
+    title.textContent=sc+' ('+byScene[sc].length+')';
+    grid.appendChild(title);
+    byScene[sc].forEach(function(item){
+      var i=item.i,p=item.p;
+      var div=document.createElement('div');div.className='pl-item';
+      if(i===phrases.indexOf(phrases[curIdx])){div.style.borderColor='#c0392b';div.style.background='#fef2f0';}
+      div.innerHTML='<span class="pl-n">'+(i+1)+'</span><div class="pl-texts"><div class="pl-tr">'+escHtml(p.tr)+'</div><div class="pl-ja">'+escHtml(p.ja)+'</div></div><div class="pl-check'+(isDone(i)?' done':'')+'">'+( isDone(i)?'✓':'')+'</div><button class="pl-del" data-i="'+i+'">✕</button>';
+      div.querySelector('.pl-del').addEventListener('click',function(e){e.stopPropagation();delPhrase(parseInt(this.getAttribute('data-i')));});
+      div.addEventListener('click',(function(ii){return function(){
+        activeScene=phrases[ii].cat;buildSceneBars();
+        var fp=getFilteredPhrases();var li=fp.indexOf(phrases[ii]);
+        renderPhrase(li>=0?li:0);switchTab('practice',g('tab-practice'));
+      };})(i));
+      grid.appendChild(div);
+    });
   });
 }
+
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 function addPhrase(){
   var tr=g('add-tr').value.trim(),ja=g('add-ja').value.trim(),cat=g('add-cat').value.trim()||'カスタム';
   if(!tr&&!ja){showToast('フレーズを入力してください',true);return;}
-  phrases.push({tr:tr||'(no TR)',ja:ja||'(日本語なし)',rom:'',cat:cat});
+  phrases.push({tr:tr||'(TR未入力)',ja:ja||'(日本語未入力)',rom:'',cat:cat});
+  if(scenes.indexOf(cat)<0)scenes.push(cat);
   g('add-tr').value='';g('add-ja').value='';g('add-cat').value='';
-  updateHeader();renderManage();showToast('✨ 追加しました！');
+  updateHeader();renderManage();buildSceneBars();showToast('✨ 追加しました！');
 }
+
 function delPhrase(i){
   phrases.splice(i,1);
   done=done.filter(function(d){return d!==i;}).map(function(d){return d>i?d-1:d;});
-  if(curIdx>=phrases.length)curIdx=Math.max(0,phrases.length-1);
-  updateHeader();renderManage();renderPhrase(curIdx);
+  updateHeader();renderManage();renderPhrase(0);
 }
+
 function switchTab(v,btn){
   document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
   document.querySelectorAll('.tab').forEach(function(el){el.classList.remove('active');});
   g('view-'+v).classList.add('active');if(btn)btn.classList.add('active');
   if(v==='manage')renderManage();
+  if(v==='flash'){renderFlash(0);}
 }
+
 function showToast(msg,err){
   var t=g('toast');t.textContent=msg;t.style.background=err?'#b91c1c':'#1c1a15';t.className='show';
   clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.className='';},3000);
 }
+
 init();
 </script>
 </body>

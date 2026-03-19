@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KRE日本学科 英語説明練習</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Playfair+Display:wght@600;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --ink: #1a1008;
+    --paper: #faf7f2;
+    --cream: #f0ebe0;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --teal: #2a6b70;
+    --teal-light: #3d9ea3;
+    --grey: #7a7065;
+    --border: #d4c9b0;
+    --correct: #2d6a4f;
+    --wrong: #c0392b;
+    --shadow: 0 4px 20px rgba(26,16,8,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 18px 20px 14px;
+    text-align: center;
+    position: relative;
+  }
+  .header-sub {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+    font-weight: 300;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .header-title span { color: var(--gold-light); }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    background: var(--cream);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-tab {
+    flex: 1;
+    padding: 12px 8px;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--grey);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .nav-tab.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+    background: var(--paper);
+  }
+  .nav-tab .tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+  /* SECTIONS */
+  .section { display: none; padding: 16px; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: var(--grey);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* VOCAB LIST */
+  .vocab-category {
+    margin-bottom: 20px;
+  }
+  .vocab-cat-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+  .vocab-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cream);
+    gap: 12px;
+  }
+  .vocab-item:last-child { border-bottom: none; }
+  .vocab-en {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--teal);
+    flex: 1;
+  }
+  .vocab-ja {
+    font-size: 12px;
+    color: var(--grey);
+    text-align: right;
+    flex-shrink: 0;
+    max-width: 140px;
+    line-height: 1.4;
+  }
+  .vocab-note {
+    font-size: 11px;
+    color: var(--grey);
+    margin-top: 3px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* PHRASE LIST */
+  .phrase-item {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--teal);
+  }
+  .phrase-en { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; line-height: 1.5; }
+  .phrase-note { font-size: 11px; color: var(--grey); font-style: italic; }
+  .phrase-context { font-size: 11px; color: var(--teal); font-weight: 500; margin-bottom: 4px; }
+
+  /* GAME BUTTON */
+  .btn-primary {
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .btn-primary:active { background: var(--teal-light); }
+
+  .btn-secondary {
+    background: none;
+    color: var(--teal);
+    border: 2px solid var(--teal);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+  .btn-secondary:active { background: var(--cream); }
+
+  /* QUIZ */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .quiz-progress {
+    font-size: 12px;
+    color: var(--grey);
+  }
+  .quiz-score-badge {
+    background: var(--ink);
+    color: var(--gold-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .question-card {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .question-text {
+    font-size: 17px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .question-sub {
+    font-size: 11px;
+    color: var(--gold-light);
+    text-align: center;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .option-btn {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.4;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .option-btn:active { transform: scale(0.97); }
+  .option-btn.correct {
+    background: #d4f0e4;
+    border-color: var(--correct);
+    color: var(--correct);
+    font-weight: 600;
+  }
+  .option-btn.wrong {
+    background: #fde8e8;
+    border-color: var(--wrong);
+    color: var(--wrong);
+  }
+  .option-btn:disabled { cursor: default; }
+
+  .feedback-box {
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback-box.correct-fb { background: #d4f0e4; color: var(--correct); border: 1px solid #a8d5bc; }
+  .feedback-box.wrong-fb { background: #fde8e8; color: var(--wrong); border: 1px solid #f5b8b8; }
+  .feedback-box.show { display: block; }
+
+  /* TRANSLATION GAME */
+  .translation-card {
+    background: linear-gradient(135deg, var(--ink) 0%, #2d1f0e 100%);
+    color: var(--paper);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .trans-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+  .trans-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--paper);
+  }
+
+  .trans-input {
+    width: 100%;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    resize: none;
+    height: 90px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .trans-input:focus { outline: none; border-color: var(--teal); }
+
+  .model-answer {
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+    border-left: 3px solid var(--gold);
+    display: none;
+  }
+  .model-answer.show { display: block; }
+  .model-answer-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .model-answer-text { font-size: 14px; line-height: 1.6; color: var(--ink); }
+  .model-answer-tip { font-size: 11px; color: var(--grey); margin-top: 6px; font-style: italic; }
+
+  .self-rate {
+    display: none;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .self-rate.show { display: flex; }
+  .rate-btn {
+    flex: 1;
+    padding: 10px 6px;
+    border: 2px solid var(--border);
+    background: white;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .rate-btn.great { border-color: var(--correct); color: var(--correct); }
+  .rate-btn.ok { border-color: var(--gold); color: var(--gold); }
+  .rate-btn.again { border-color: var(--wrong); color: var(--wrong); }
+
+  /* RESULT SCREEN */
+  .result-screen {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .result-emoji { font-size: 56px; margin-bottom: 12px; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .result-label { font-size: 13px; color: var(--grey); margin: 6px 0 20px; }
+  .result-message { font-size: 15px; color: var(--ink); margin-bottom: 20px; line-height: 1.5; }
+
+  /* FLIP CARD */
+  .flip-container { perspective: 800px; margin-bottom: 14px; cursor: pointer; }
+  .flip-card { transition: transform 0.5s; transform-style: preserve-3d; position: relative; height: 130px; }
+  .flip-container.flipped .flip-card { transform: rotateY(180deg); }
+  .flip-face {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 16px;
+    text-align: center;
+  }
+  .flip-front {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .flip-back {
+    background: var(--teal);
+    color: white;
+    transform: rotateY(180deg);
+  }
+  .flip-hint { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+  .flip-word { font-size: 18px; font-weight: 500; line-height: 1.4; }
+  .flip-sub { font-size: 12px; opacity: 0.7; margin-top: 6px; }
+
+  /* FLASHCARD NAV */
+  .flashcard-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .flashcard-nav button {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid var(--border);
+    background: white;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+  }
+  .badge-teal { background: #d0f0f2; color: var(--teal); }
+  .badge-gold { background: #fdf0d0; color: var(--gold); }
+
+  /* GAME SELECTOR */
+  .game-selector { margin-bottom: 20px; }
+  .game-option {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .game-option:active { background: var(--cream); border-color: var(--teal); }
+  .game-icon { font-size: 28px; flex-shrink: 0; }
+  .game-info { flex: 1; }
+  .game-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+  .game-desc { font-size: 12px; color: var(--grey); line-height: 1.4; }
+  .game-arrow { font-size: 18px; color: var(--grey); }
+
+  /* HIDDEN/SHOW utility */
+  .hidden { display: none !important; }
+
+  /* SCROLLABLE CATEGORY TAGS */
+  .cat-tags {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .cat-tags::-webkit-scrollbar { display: none; }
+  .cat-tag {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .cat-tag.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  /* TIPS */
+  .tip-box {
+    background: #fff8e6;
+    border: 1px solid #e8d090;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #7a5c00;
+  }
+  .tip-box strong { color: #5a4000; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-sub">KRE Károli University</div>
+  <div class="header-title">日本学科を<span>英語</span>で説明</div>
+</div>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('vocab')">
+    <span class="tab-icon">📚</span>語彙リスト
+  </button>
+  <button class="nav-tab" onclick="showSection('flashcards')">
+    <span class="tab-icon">🃏</span>フラッシュ<br>カード
+  </button>
+  <button class="nav-tab" onclick="showSection('quiz')">
+    <span class="tab-icon">🎯</span>語彙<br>クイズ
+  </button>
+  <button class="nav-tab" onclick="showSection('translate')">
+    <span class="tab-icon">✏️</span>翻訳<br>練習
+  </button>
+</div>
+
+<!-- ===================== VOCAB LIST ===================== -->
+<div id="sec-vocab" class="section active">
+  <div class="section-title">語彙リスト</div>
+  <div class="section-desc">日本学科を英語で説明するときに使う重要な語彙集です。</div>
+
+  <div class="cat-tags">
+    <div class="cat-tag active" onclick="filterVocab('all', this)">すべて</div>
+    <div class="cat-tag" onclick="filterVocab('org', this)">組織</div>
+    <div class="cat-tag" onclick="filterVocab('academic', this)">学術</div>
+    <div class="cat-tag" onclick="filterVocab('program', this)">プログラム</div>
+    <div class="cat-tag" onclick="filterVocab('numbers', this)">数字・実績</div>
+  </div>
+
+  <div id="vocab-list"></div>
+</div>
+
+<!-- ===================== FLASHCARDS ===================== -->
+<div id="sec-flashcards" class="section">
+  <div class="section-title">フラッシュカード</div>
+  <div class="section-desc">カードをタップして英語を確認。左右ボタンで次のカードへ。</div>
+
+  <div id="fc-counter" class="quiz-header">
+    <span class="quiz-progress" id="fc-progress">1 / 30</span>
+    <span class="quiz-score-badge" id="fc-cat">全カテゴリ</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="fc-progress-bar" style="width:3%"></div></div>
+
+  <div class="flip-container" id="flip-container" onclick="flipCard()">
+    <div class="flip-card" id="flip-card">
+      <div class="flip-face flip-front">
+        <div class="flip-hint">日本語 → タップして英語を見る</div>
+        <div class="flip-word" id="fc-ja">—</div>
+        <div class="flip-sub" id="fc-context">—</div>
+      </div>
+      <div class="flip-face flip-back">
+        <div class="flip-hint">English</div>
+        <div class="flip-word" id="fc-en">—</div>
+        <div class="flip-sub" id="fc-note">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flashcard-nav">
+    <button onclick="fcMove(-1)">← 前へ</button>
+    <button onclick="flipCard()">🔄 めくる</button>
+    <button onclick="fcMove(1)">次へ →</button>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>使い方のヒント：</strong>日本語を見て英語を思い出してからタップして確認しましょう。
+  </div>
+</div>
+
+<!-- ===================== QUIZ ===================== -->
+<div id="sec-quiz" class="section">
+  <!-- START SCREEN -->
+  <div id="quiz-start">
+    <div class="section-title">語彙クイズ</div>
+    <div class="section-desc">日本語を見て正しい英語訳を選んでください。</div>
+    <div class="game-selector">
+      <div class="game-option" onclick="startQuiz('all')">
+        <div class="game-icon">🎲</div>
+        <div class="game-info">
+          <div class="game-name">全カテゴリ <span class="badge badge-teal">難しめ</span></div>
+          <div class="game-desc">全語彙からランダム出題（20問）</div>
+        </div>
+        <div class="game-arrow">›</div>
+      </div>
+      <div class="game-option" onclick="startQuiz('org')">
+        <div class="game-icon">🏛️</div>
+        <div class="game-info">
+          <div class="game-name">組織・構造</div>
+          <div class="game-desc">大学・学科・役職など</div>
+        </div>
+        <div class="game-arrow">›</div>
+      </div>
+      <div class="game-option" onclick="startQuiz('academic')">
+        <div class="game-icon">🎓</div>
+        <div class="game-info">
+          <div class="game-name">学術・カリキュラム</div>
+          <div class="game-desc">授業・研究・学位など</div>
+        </div>
+        <div class="game-arrow">›</div>
+      </div>
+      <div class="game-option" onclick="startQuiz('program')">
+        <div class="game-icon">🤝</div>
+        <div class="game-info">
+          <div class="game-name">プログラム・活動</div>
+          <div class="game-desc">交換留学・イベントなど</div>
+        </div>
+        <div class="game-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="hidden">
+    <div class="quiz-header">
+      <span class="quiz-progress" id="q-progress">問題 1 / 20</span>
+      <span class="quiz-score-badge" id="q-score">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="q-progress-bar" style="width:0%"></div></div>
+
+    <div class="question-card">
+      <div>
+        <div class="question-text" id="q-text">—</div>
+        <div class="question-sub">英語訳を選んでください</div>
+      </div>
+    </div>
+
+    <div class="options-grid" id="q-options"></div>
+    <div class="feedback-box" id="q-feedback"></div>
+
+    <button class="btn-primary hidden" id="q-next-btn" onclick="nextQuestion()">次の問題 →</button>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="quiz-result" class="hidden">
+    <div class="result-screen">
+      <div class="result-emoji" id="r-emoji">🎉</div>
+      <div class="result-score" id="r-score">—</div>
+      <div class="result-label" id="r-label">—</div>
+      <div class="result-message" id="r-message">—</div>
+      <button class="btn-primary" onclick="resetQuiz()">もう一度チャレンジ</button>
+      <button class="btn-secondary" onclick="showSection('quiz')">カテゴリを変える</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TRANSLATE ===================== -->
+<div id="sec-translate" class="section">
+  <!-- START SCREEN -->
+  <div id="trans-start">
+    <div class="section-title">翻訳練習</div>
+    <div class="section-desc">日本語フレーズを英語に翻訳してみましょう。模範解答と比較して自己採点できます。</div>
+
+    <div class="tip-box">
+      💡 <strong>練習のコツ：</strong>まず自分で英語を書いてみてから模範解答を見ましょう。完璧でなくてもOK！
+    </div>
+
+    <div class="section-title" style="font-size:16px; margin-bottom:10px;">使えるフレーズ集</div>
+    <div id="phrase-list"></div>
+
+    <button class="btn-primary" onclick="startTranslation()" style="margin-top:10px;">翻訳ゲームを始める →</button>
+  </div>
+
+  <!-- TRANSLATION GAME -->
+  <div id="trans-game" class="hidden">
+    <div class="quiz-header">
+      <span class="quiz-progress" id="t-progress">1 / 15</span>
+      <span class="quiz-score-badge" id="t-score">練習中</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="t-progress-bar" style="width:0%"></div></div>
+
+    <div class="translation-card">
+      <div class="trans-label">日本語 → 英語に翻訳</div>
+      <div class="trans-jp" id="t-jp-text">—</div>
+    </div>
+
+    <textarea class="trans-input" id="t-input" placeholder="英語訳をここに書いてみてください..."></textarea>
+
+    <button class="btn-primary" id="t-show-btn" onclick="showModelAnswer()">模範解答を見る</button>
+
+    <div class="model-answer" id="t-model">
+      <div class="model-answer-label">📝 模範解答</div>
+      <div class="model-answer-text" id="t-model-text">—</div>
+      <div class="model-answer-tip" id="t-model-tip">—</div>
+    </div>
+
+    <div class="self-rate" id="t-rate">
+      <button class="rate-btn great" onclick="rateAndNext('great')">😊 よくできた</button>
+      <button class="rate-btn ok" onclick="rateAndNext('ok')">🙂 まあまあ</button>
+      <button class="rate-btn again" onclick="rateAndNext('again')">😅 もう一度</button>
+    </div>
+
+    <button class="btn-secondary hidden" id="t-next-btn" onclick="nextTranslation()">次へ →</button>
+    <button class="btn-secondary" onclick="resetTranslation()">← リストに戻る</button>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+
+const vocabData = [
+  // org
+  { ja: "カルビン派大学", en: "Reformed (Calvinist) University", note: "Protestant Christian university", cat: "org" },
+  { ja: "人文社会学部", en: "Faculty of Humanities and Social Sciences", note: "", cat: "org" },
+  { ja: "東アジア研究センター", en: "Institute of East Asian Studies", note: "Also: East Asian Studies Center", cat: "org" },
+  { ja: "日本学科", en: "Department of Japanese Studies", note: "Japanology", cat: "org" },
+  { ja: "学科長", en: "Head of Department", note: "", cat: "org" },
+  { ja: "准教授", en: "Associate Professor", note: "habil. = holds habilitation", cat: "org" },
+  { ja: "助教授", en: "Assistant Professor", note: "", cat: "org" },
+  { ja: "講師", en: "Lecturer", note: "", cat: "org" },
+  { ja: "語学講師", en: "Language Instructor / Language Teacher", note: "", cat: "org" },
+  { ja: "非常勤講師", en: "Part-time Lecturer / Adjunct Instructor", note: "", cat: "org" },
+  { ja: "ボランティア講師", en: "Volunteer Instructor", note: "", cat: "org" },
+  { ja: "常勤教員", en: "Full-time Faculty Member", note: "", cat: "org" },
+  // academic
+  { ja: "学士課程", en: "Bachelor's Program / Undergraduate Program", note: "", cat: "academic" },
+  { ja: "修士課程", en: "Master's Program / Graduate Program", note: "", cat: "academic" },
+  { ja: "博士課程", en: "Doctoral Program / PhD Program", note: "", cat: "academic" },
+  { ja: "カリキュラム", en: "Curriculum", note: "Course offerings", cat: "academic" },
+  { ja: "日本語能力試験（JLPT）", en: "Japanese Language Proficiency Test (JLPT)", note: "N1–N5 levels", cat: "academic" },
+  { ja: "翻訳学", en: "Translation Studies", note: "", cat: "academic" },
+  { ja: "日本語教育学", en: "Japanese Language Education / Pedagogy", note: "", cat: "academic" },
+  { ja: "言語学", en: "Linguistics", note: "", cat: "academic" },
+  { ja: "古典文献学", en: "Classical Philology", note: "", cat: "academic" },
+  { ja: "仲介の役割", en: "Mediating role / Bridge-building role", note: "Cultural mediation", cat: "academic" },
+  { ja: "学術書", en: "Academic publication / Scholarly monograph", note: "", cat: "academic" },
+  { ja: "学士卒以上", en: "For graduates with at least a bachelor's degree", note: "", cat: "academic" },
+  // program
+  { ja: "交換留学協定", en: "Student Exchange Agreement", note: "", cat: "program" },
+  { ja: "エラスムス・プログラム", en: "Erasmus Programme", note: "EU student exchange scheme", cat: "program" },
+  { ja: "サマージョブプログラム", en: "Summer Internship Program", note: "Internship in Japan", cat: "program" },
+  { ja: "SDGsプログラム", en: "SDGs Program", note: "Sustainable Development Goals", cat: "program" },
+  { ja: "日本学会議", en: "Japanese Studies Conference", note: "Held annually", cat: "program" },
+  { ja: "日本語スピーチコンテスト", en: "Japanese Speech Contest", note: "", cat: "program" },
+  // numbers
+  { ja: "学生数330名", en: "Approximately 330 students enrolled", note: "300 undergrad, 30 grad", cat: "numbers" },
+  { ja: "協定校15校", en: "15 partner universities in Japan", note: "", cat: "numbers" },
+  { ja: "卒業時N2〜N1レベル", en: "Graduates reach N2–N1 level", note: "Advanced Japanese proficiency", cat: "numbers" },
+  { ja: "1995年開設", en: "Established in 1995", note: "", cat: "numbers" },
+  { ja: "10〜15名が交換留学", en: "10 to 15 students study abroad each year", note: "", cat: "numbers" },
+];
+
+const flashcardData = vocabData.map((v, i) => ({
+  id: i,
+  ja: v.ja,
+  en: v.en,
+  note: v.note,
+  context: v.cat,
+  cat: v.cat
+}));
+
+const phraseData = [
+  {
+    context: "学科紹介",
+    en: "The Department of Japanese Studies was established in 1995 and currently has approximately 330 students.",
+    ja: "日本学科は1995年に開設され、現在約330名の学生が在籍しています。",
+    tip: "was established / currently has — 設立と現状の説明に使える定番フレーズ"
+  },
+  {
+    context: "組織説明",
+    en: "It is part of the Faculty of Humanities and Social Sciences at Károli Gáspár Reformed University in Budapest.",
+    ja: "ブダペストにあるカーロリ・ガーシュパール・カルビン派大学の人文社会学部に属しています。",
+    tip: "It is part of ~ — 所属・組織の説明に便利"
+  },
+  {
+    context: "特徴",
+    en: "One distinctive feature is that specialist faculty members are actively involved in Japanese language teaching, which is rare in European universities.",
+    ja: "欧州の大学と異なり、専門教員も日本語教育に積極的に携わっているのが特徴です。",
+    tip: "One distinctive feature is that ~ — 特徴・強みを強調するフレーズ"
+  },
+  {
+    context: "カリキュラム",
+    en: "The undergraduate program covers a wide range of subjects, including Japanese language, history, literature, religion, and translation.",
+    ja: "学士課程では、日本語、日本史、文学、宗教学、翻訳学など幅広い科目を学びます。",
+    tip: "covers a wide range of subjects including ~ — 多様性を示すのに便利"
+  },
+  {
+    context: "目標",
+    en: "The goal of the bachelor's program is for students to acquire advanced Japanese proficiency and a deep understanding of Japanese culture.",
+    ja: "学士課程の目標は、高度な日本語能力と日本文化への深い理解を身につけることです。",
+    tip: "The goal is for students to ~ — 目的・目標を説明するフレーズ"
+  },
+  {
+    context: "協定校",
+    en: "We have student exchange agreements with 15 Japanese universities, including Osaka University and Waseda University.",
+    ja: "大阪大学や早稲田大学など、日本の15大学と交換留学協定を結んでいます。",
+    tip: "We have ~ agreements with — 協定・提携を説明するときに使える"
+  },
+  {
+    context: "卒業後の進路",
+    en: "Graduates work in a variety of fields, such as Japanese companies in Europe, embassies, universities, and language schools.",
+    ja: "卒業生は欧州の日系企業、大使館、大学、語学学校など幅広い分野で活躍しています。",
+    tip: "work in a variety of fields such as — 進路の多様性を示す"
+  },
+  {
+    context: "学術活動",
+    en: "The department has published a series of academic books called 'Modern Japanese Studies,' with the seventh volume due out this year.",
+    ja: "学科は『現代日本学』シリーズの学術書を出版しており、今年は第7巻が刊行予定です。",
+    tip: "with ~ due out this year — 予定・近刊を表すフレーズ"
+  },
+  {
+    context: "日本語レベル",
+    en: "Bachelor's graduates typically reach JLPT N3 to N2 level, while master's graduates achieve N2 to N1.",
+    ja: "学士卒業時の平均的な日本語レベルはN3〜N2、修士卒業時はN2〜N1です。",
+    tip: "typically reach ~ level — 平均・目標レベルを説明するフレーズ"
+  },
+  {
+    context: "プログラム",
+    en: "The SDGs Program brings 10 to 15 Japanese students to Hungary twice a year to collaborate with our students.",
+    ja: "SDGsプログラムでは年2回、日本の学生10〜15名がハンガリーを訪れ、学科の学生と協力します。",
+    tip: "brings ~ to ~ to collaborate — 国際交流プログラムの説明に使える"
+  },
+  {
+    context: "プログラム",
+    en: "Through the Summer Internship Program, our students can gain work experience in Japan on a working holiday visa.",
+    ja: "サマージョブプログラムを通じて、学生はサマービザで日本でインターン活動ができます。",
+    tip: "gain work experience in ~ — 就業体験を説明するフレーズ"
+  },
+  {
+    context: "クラブ活動",
+    en: "Students can join clubs such as calligraphy, literature, theater, and career development.",
+    ja: "学生は書道、文学、演劇、キャリア形成などのクラブ活動に参加できます。",
+    tip: "can join clubs such as — 課外活動の紹介"
+  },
+  {
+    context: "学術実績",
+    en: "Since 2005, more than 20 students have won prizes at the National Student Academic Conference, including 5 first-place awards.",
+    ja: "2005年以降、全国学生学術会議で20名以上が入賞し、うち5回が1位を受賞しています。",
+    tip: "including ~ — 実績の詳細を付け加えるフレーズ"
+  },
+  {
+    context: "辞典",
+    en: "In 2015, the department published a Japanese-Hungarian dictionary, which was awarded by the Hungarian Foreign Minister.",
+    ja: "2015年に日本語-ハンガリー語大辞典を刊行し、外務大臣表彰を受賞しました。",
+    tip: "which was awarded by — 受賞・表彰を説明するフレーズ"
+  },
+  {
+    context: "JLPT",
+    en: "The department has served as an official JLPT testing site since 1997.",
+    ja: "1997年から日本語能力試験の公式実施機関となっています。",
+    tip: "has served as ~ since — ずっと続いていることを示す現在完了形"
+  },
+];
+
+// ========== STATE ==========
+let currentCategory = 'all';
+let fcIndex = 0;
+let fcFlipped = false;
+let quizQuestions = [];
+let quizIndex = 0;
+let quizCorrect = 0;
+let transIndex = 0;
+let transRedo = [];
+
+// ========== SECTION NAVIGATION ==========
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  const tabs = ['vocab','flashcards','quiz','translate'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(name)].classList.add('active');
+}
+
+// ========== VOCAB LIST ==========
+function filterVocab(cat, el) {
+  currentCategory = cat;
+  document.querySelectorAll('.cat-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderVocab();
+}
+
+function renderVocab() {
+  const cats = {
+    org: { label: "組織・役職", items: [] },
+    academic: { label: "学術・カリキュラム", items: [] },
+    program: { label: "プログラム・活動", items: [] },
+    numbers: { label: "数字・実績", items: [] },
+  };
+  vocabData.forEach(v => {
+    if (currentCategory === 'all' || v.cat === currentCategory) {
+      cats[v.cat].items.push(v);
+    }
+  });
+
+  let html = '';
+  for (const [key, cat] of Object.entries(cats)) {
+    if (cat.items.length === 0) continue;
+    if (currentCategory === 'all') {
+      html += `<div class="vocab-category"><div class="vocab-cat-title">${cat.label}</div>`;
+    } else {
+      html += `<div class="card">`;
+    }
+    cat.items.forEach(v => {
+      html += `<div class="vocab-item">
+        <div><div class="vocab-en">${v.en}</div>${v.note ? `<div class="vocab-note">${v.note}</div>` : ''}</div>
+        <div class="vocab-ja">${v.ja}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  document.getElementById('vocab-list').innerHTML = html;
+}
+
+// ========== FLASHCARDS ==========
+function renderFC() {
+  const cards = flashcardData;
+  const card = cards[fcIndex];
+  fcFlipped = false;
+  document.getElementById('flip-container').classList.remove('flipped');
+  document.getElementById('fc-ja').textContent = card.ja;
+  document.getElementById('fc-en').textContent = card.en;
+  document.getElementById('fc-context').textContent = catLabel(card.cat);
+  document.getElementById('fc-note').textContent = card.note || '　';
+  document.getElementById('fc-progress').textContent = `${fcIndex + 1} / ${cards.length}`;
+  document.getElementById('fc-progress-bar').style.width = `${((fcIndex + 1) / cards.length) * 100}%`;
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('flip-container').classList.toggle('flipped', fcFlipped);
+}
+
+function fcMove(dir) {
+  const total = flashcardData.length;
+  fcIndex = (fcIndex + dir + total) % total;
+  renderFC();
+}
+
+function catLabel(cat) {
+  const m = { org: '組織・役職', academic: '学術', program: 'プログラム', numbers: '数字・実績' };
+  return m[cat] || cat;
+}
+
+// ========== QUIZ ==========
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startQuiz(cat) {
+  const pool = cat === 'all' ? vocabData : vocabData.filter(v => v.cat === cat);
+  const shuffled = shuffle(pool);
+  quizQuestions = shuffled.slice(0, Math.min(20, shuffled.length));
+  quizIndex = 0;
+  quizCorrect = 0;
+  document.getElementById('quiz-start').classList.add('hidden');
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizQuestions[quizIndex];
+  document.getElementById('q-progress').textContent = `問題 ${quizIndex + 1} / ${quizQuestions.length}`;
+  document.getElementById('q-score').textContent = `${quizCorrect} / ${quizIndex}`;
+  document.getElementById('q-progress-bar').style.width = `${(quizIndex / quizQuestions.length) * 100}%`;
+  document.getElementById('q-text').textContent = q.ja;
+  document.getElementById('q-feedback').className = 'feedback-box';
+  document.getElementById('q-next-btn').classList.add('hidden');
+
+  // Generate options: correct + 3 random distractors
+  const others = shuffle(vocabData.filter(v => v.en !== q.en)).slice(0, 3);
+  const options = shuffle([q, ...others]);
+
+  const grid = document.getElementById('q-options');
+  grid.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt.en;
+    btn.onclick = () => checkAnswer(opt.en, q.en, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, correct, btn) {
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+
+  const fb = document.getElementById('q-feedback');
+  if (selected === correct) {
+    btn.classList.add('correct');
+    quizCorrect++;
+    fb.textContent = `✅ 正解！ "${correct}"`;
+    fb.className = 'feedback-box correct-fb show';
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = `❌ 不正解。正解は "${correct}"`;
+    fb.className = 'feedback-box wrong-fb show';
+  }
+  document.getElementById('q-next-btn').classList.remove('hidden');
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex >= quizQuestions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = quizCorrect / quizQuestions.length;
+  let emoji, msg;
+  if (pct >= 0.9) { emoji = '🏆'; msg = '素晴らしい！ほぼ完璧です。英語での説明に自信を持って！'; }
+  else if (pct >= 0.7) { emoji = '🎉'; msg = 'よくできました！もう少し練習すれば完璧です。'; }
+  else if (pct >= 0.5) { emoji = '📖'; msg = 'まだ伸びしろがあります。語彙リストを見直してみましょう。'; }
+  else { emoji = '💪'; msg = 'もう一度チャレンジ！フラッシュカードで練習してから再挑戦してみては？'; }
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-score').textContent = `${quizCorrect}/${quizQuestions.length}`;
+  document.getElementById('r-label').textContent = `${Math.round(pct * 100)}% 正解`;
+  document.getElementById('r-message').textContent = msg;
+}
+
+function resetQuiz() {
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-start').classList.remove('hidden');
+}
+
+// ========== PHRASES ==========
+function renderPhrases() {
+  let html = '';
+  phraseData.forEach((p, i) => {
+    html += `<div class="phrase-item">
+      <div class="phrase-context">📌 ${p.context}</div>
+      <div class="phrase-en">${p.en}</div>
+      <div class="phrase-note">${p.tip}</div>
+    </div>`;
+  });
+  document.getElementById('phrase-list').innerHTML = html;
+}
+
+// ========== TRANSLATION GAME ==========
+let transQueue = [];
+
+function startTranslation() {
+  transQueue = shuffle(phraseData);
+  transIndex = 0;
+  document.getElementById('trans-start').classList.add('hidden');
+  document.getElementById('trans-game').classList.remove('hidden');
+  renderTranslation();
+}
+
+function renderTranslation() {
+  const p = transQueue[transIndex];
+  document.getElementById('t-progress').textContent = `${transIndex + 1} / ${transQueue.length}`;
+  document.getElementById('t-progress-bar').style.width = `${((transIndex) / transQueue.length) * 100}%`;
+  document.getElementById('t-jp-text').textContent = p.ja;
+  document.getElementById('t-input').value = '';
+  document.getElementById('t-model').classList.remove('show');
+  document.getElementById('t-rate').classList.remove('show');
+  document.getElementById('t-show-btn').classList.remove('hidden');
+  document.getElementById('t-next-btn').classList.add('hidden');
+  document.getElementById('t-score').textContent = '練習中';
+}
+
+function showModelAnswer() {
+  const p = transQueue[transIndex];
+  document.getElementById('t-model-text').textContent = p.en;
+  document.getElementById('t-model-tip').textContent = '💡 ' + p.tip;
+  document.getElementById('t-model').classList.add('show');
+  document.getElementById('t-rate').classList.add('show');
+  document.getElementById('t-show-btn').classList.add('hidden');
+}
+
+function rateAndNext(rating) {
+  if (rating === 'again') {
+    transQueue.push(transQueue[transIndex]);
+  }
+  document.getElementById('t-rate').classList.remove('show');
+  document.getElementById('t-next-btn').classList.remove('hidden');
+
+  const labels = { great: '😊 よくできた！', ok: '🙂 まあまあ', again: '🔁 あとで復習' };
+  document.getElementById('t-score').textContent = labels[rating];
+}
+
+function nextTranslation() {
+  transIndex++;
+  if (transIndex >= transQueue.length) {
+    document.getElementById('t-score').textContent = '完了！🎊';
+    document.getElementById('t-jp-text').textContent = 'すべてのフレーズを練習しました！おつかれさまでした😊';
+    document.getElementById('t-input').value = '';
+    document.getElementById('t-show-btn').classList.add('hidden');
+    document.getElementById('t-next-btn').classList.add('hidden');
+    document.getElementById('t-model').classList.remove('show');
+    document.getElementById('t-rate').classList.remove('show');
+    document.getElementById('t-progress-bar').style.width = '100%';
+    return;
+  }
+  renderTranslation();
+}
+
+function resetTranslation() {
+  document.getElementById('trans-game').classList.add('hidden');
+  document.getElementById('trans-start').classList.remove('hidden');
+}
+
+// ========== INIT ==========
+renderVocab();
+renderFC();
+renderPhrases();
+</script>
+</body>
+</html>
