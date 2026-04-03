@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CA Japanese Phrase Practice</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f8ff; color: #333; text-align: center; padding: 20px; }
+        .container { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .phrase-box { font-size: 1.5em; font-weight: bold; margin-bottom: 20px; padding: 20px; border: 2px solid #0056b3; border-radius: 10px; background-color: #e6f2ff; }
+        .hidden-text { display: none; margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; font-size: 1.1em; }
+        button { background-color: #0056b3; color: white; border: none; padding: 10px 20px; margin: 5px; font-size: 1em; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #004494; }
+        .mic-btn { background-color: #28a745; font-size: 1.2em; }
+        .mic-btn:hover { background-color: #218838; }
+        .next-btn { background-color: #ff9800; font-weight: bold; margin-top: 20px; }
+        #feedback { font-size: 1.2em; font-weight: bold; margin-top: 20px; }
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+        .score-board { font-size: 1.2em; margin-bottom: 20px; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>✈️ CA Phrase Practice / Légiutas-kísérő Kifejezések</h2>
+    <div class="score-board">Score / Pontszám: <span id="score">0</span></div>
+    
+    <div class="phrase-box" id="phrase-display">フレーズがここに表示されます</div>
+    
+    <div>
+        <button onclick="toggleText('hiragana')">あ/A (Hiragana)</button>
+        <button onclick="toggleText('english')">English</button>
+        <button onclick="toggleText('hungarian')">Magyar</button>
+    </div>
+
+    <div id="hiragana" class="hidden-text" style="color: #0056b3;"></div>
+    <div id="english" class="hidden-text" style="color: #e67e22;"></div>
+    <div id="hungarian" class="hidden-text" style="color: #27ae60;"></div>
+
+    <br>
+    <button class="mic-btn" onclick="startSpeechRecognition()">🎤 発音チェック / Kiejtés ellenőrzése</button>
+    
+    <div id="feedback"></div>
+
+    <button class="next-btn" onclick="nextPhrase()">次へ / Következő ➔</button>
+</div>
+
+<script>
+    // 練習するフレーズのデータ（ここに他のフレーズも追加できます）
+    const phrases = [
+        {
+            jp: "10時30分発、JAL123便をご利用のお客様にお知らせいたします。",
+            hira: "じゅうじさんじゅっぷんはつ、じゃるいちにさんびんをごりようのおきゃくさまにおしらせいたします。",
+            en: "Attention passengers flying on JAL flight 123 departing at 10:30.",
+            hu: "Tájékoztatjuk a 10:30-kor induló JAL 123-as járat utasait."
+        },
+        {
+            jp: "おはようございます。お座席はどちらでしょうか。",
+            hira: "おはようございます。おざせきはどちらでしょうか。",
+            en: "Good morning. Where is your seat?",
+            hu: "Jó reggelt! Hol van a lefoglalt ülése?"
+        },
+        {
+            jp: "お飲み物はいかがですか？",
+            hira: "おのみものはいかがですか？",
+            en: "Would you like something to drink?",
+            hu: "Kér valamit inni?"
+        },
+        {
+            jp: "恐れ入りますが、お座席にお戻りください。",
+            hira: "おそれいりますが、おざせきにおもどりください。",
+            en: "Excuse me, but please return to your seat.",
+            hu: "Elnézést, de kérem, térjen vissza a helyére."
+        },
+        {
+            jp: "シートベルト着用サインが点灯いたしました。",
+            hira: "しーとべるとちゃくようさいんがてんとういたしました。",
+            en: "The seatbelt sign has been turned on.",
+            hu: "A biztonsági öv bekapcsolására figyelmeztető jelzés bekapcsolt."
+        }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+
+    function loadPhrase() {
+        document.getElementById('phrase-display').innerText = phrases[currentIndex].jp;
+        document.getElementById('hiragana').innerText = phrases[currentIndex].hira;
+        document.getElementById('english').innerText = phrases[currentIndex].en;
+        document.getElementById('hungarian').innerText = phrases[currentIndex].hu;
+        
+        // Hide translations and feedback
+        document.getElementById('hiragana').style.display = 'none';
+        document.getElementById('english').style.display = 'none';
+        document.getElementById('hungarian').style.display = 'none';
+        document.getElementById('feedback').innerText = '';
+    }
+
+    function toggleText(id) {
+        const el = document.getElementById(id);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function nextPhrase() {
+        currentIndex = (currentIndex + 1) % phrases.length;
+        loadPhrase();
+    }
+
+    function startSpeechRecognition() {
+        const feedback = document.getElementById('feedback');
+        if (!('webkitSpeechRecognition' in window)) {
+            feedback.innerText = "お使いのブラウザは音声認識に対応していません。(A böngésző nem támogatja a hangfelismerést.) Chromeを使用してください。";
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'ja-JP';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        feedback.innerText = "🎤 音声を聞いています... (Hallgatom...)";
+        feedback.className = "";
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            const targetPhrase = phrases[currentIndex].jp;
+            
+            // シンプルな一致チェック（句読点などを無視して判定）
+            const cleanTranscript = transcript.replace(/[、。！？\s]/g, "");
+            const cleanTarget = targetPhrase.replace(/[、。！？\s]/g, "");
+
+            if (cleanTarget.includes(cleanTranscript) || cleanTranscript.includes(cleanTarget)) {
+                feedback.innerHTML = `✅ 素晴らしい！(Kiváló!): ${transcript}`;
+                feedback.className = "correct";
+                score += 10;
+                document.getElementById('score').innerText = score;
+            } else {
+                feedback.innerHTML = `❌ もう一度！(Próbálja újra!): あなたの発音「${transcript}」`;
+                feedback.className = "incorrect";
+            }
+        };
+
+        recognition.onerror = function(event) {
+            feedback.innerText = "⚠️ エラーが発生しました。(Hiba történt.)";
+        };
+
+        recognition.start();
+    }
+
+    // 初期読み込み
+    window.onload = loadPhrase;
+</script>
+
+</body>
+</html>
